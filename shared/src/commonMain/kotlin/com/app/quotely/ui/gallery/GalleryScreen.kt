@@ -132,7 +132,7 @@ fun GalleryScreen(
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "AN AESTHETICALLY PLEASING QUOTES APP",
+                        text = "CAPTURE WHAT MOVES YOU",
                         style = typography.uiLabel.copy(fontSize = 9.sp, letterSpacing = 0.15.sp),
                         color = WarmGold,
                         textAlign = TextAlign.Center
