@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.drawscope.CanvasDrawScope
@@ -48,9 +49,15 @@ class ImageExporter {
             canvas = canvas,
             size = Size(width.toFloat(), height.toFloat())
         ) {
-            // 1. Draw Theme Background
+            // 1. Draw Theme Background Gradient
             drawRect(
-                color = themePreset.backgroundColor,
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        themePreset.backgroundColor,
+                        themePreset.surfaceColor,
+                        themePreset.backgroundColor
+                    )
+                ),
                 size = size
             )
 

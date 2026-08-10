@@ -42,7 +42,7 @@ fun FocusQuoteCanvas(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .background(themePreset.backgroundColor)
+            .background(themePreset.backgroundGradient)
             .clickable(
                 interactionSource = interactionSource,
                 indication = null,

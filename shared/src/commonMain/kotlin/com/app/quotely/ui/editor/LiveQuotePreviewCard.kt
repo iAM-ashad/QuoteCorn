@@ -46,7 +46,7 @@ fun LiveQuotePreviewCard(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(themePreset.backgroundColor)
+            .background(themePreset.backgroundGradient)
             .border(
                 width = 1.dp,
                 color = themePreset.colorScheme.outlineVariant,
