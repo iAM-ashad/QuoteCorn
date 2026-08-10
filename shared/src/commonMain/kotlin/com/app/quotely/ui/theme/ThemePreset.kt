@@ -7,7 +7,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 
 /**
- * Represents a visual theme preset for styling quote cards, focus modes, and the overall application.
+ * Represents a visual theme preset with custom color schemes and curated typography styles.
  */
 @Immutable
 data class ThemePreset(
@@ -28,10 +28,10 @@ data class ThemePreset(
         val AurelianMonolith = ThemePreset(
             id = "aurelian_monolith",
             name = "Aurelian Monolith",
-            description = "Extreme Minimalism with an Editorial soul. Deep Obsidian voids and Warm Gold accents.",
+            description = "Extreme Minimalism with an Editorial soul. Deep Obsidian voids, Warm Gold accents, and classical serif.",
             colorScheme = AurelianDarkColorScheme,
-            quoteFontFamily = PlayfairDisplayFontFamily,
-            bodyFontFamily = InterFontFamily,
+            quoteFontFamily = FontFamily.Serif,
+            bodyFontFamily = FontFamily.SansSerif,
             backgroundColor = DeepObsidianBackground,
             surfaceColor = ObsidianSurface,
             primaryAccent = WarmGold,
@@ -43,27 +43,28 @@ data class ThemePreset(
         val MidnightObsidian = ThemePreset(
             id = "midnight_obsidian",
             name = "Midnight Obsidian",
-            description = "Pure black void for OLED display intensity and minimal eye strain.",
+            description = "Pure black OLED void with platinum silver typography and cyan neon accents in crisp sans-serif.",
             colorScheme = AurelianDarkColorScheme.copy(
-                background = SurfaceContainerLowest,
-                surface = SurfaceContainerLowest,
-                onBackground = Color(0xFFF5F5F5),
-                onSurface = Color(0xFFF5F5F5)
+                background = Color(0xFF000000),
+                surface = Color(0xFF0A0A0A),
+                primary = Color(0xFF70C0F0),
+                onBackground = Color(0xFFE5E9F0),
+                onSurface = Color(0xFFE5E9F0)
             ),
-            quoteFontFamily = PlayfairDisplayFontFamily,
-            bodyFontFamily = InterFontFamily,
-            backgroundColor = SurfaceContainerLowest,
-            surfaceColor = SurfaceContainerLowest,
-            primaryAccent = PrimaryGoldContainer,
-            textColor = Color(0xFFF5F5F5),
-            attributionColor = Color(0xFFB4B5B5),
+            quoteFontFamily = FontFamily.SansSerif,
+            bodyFontFamily = FontFamily.Monospace,
+            backgroundColor = Color(0xFF000000),
+            surfaceColor = Color(0xFF0A0A0A),
+            primaryAccent = Color(0xFF70C0F0),
+            textColor = Color(0xFFE5E9F0),
+            attributionColor = Color(0xFF9AA7B7),
             isDark = true
         )
 
         val RoyalEmerald = ThemePreset(
             id = "royal_emerald",
             name = "Royal Emerald",
-            description = "Deep imperial emerald void paired with antique gold accents and crisp ivory.",
+            description = "Deep imperial emerald void paired with antique gold accents and regal cursive calligraphy.",
             colorScheme = AurelianDarkColorScheme.copy(
                 background = Color(0xFF0B1B15),
                 surface = Color(0xFF132A22),
@@ -71,8 +72,8 @@ data class ThemePreset(
                 onBackground = Color(0xFFE8F1EC),
                 onSurface = Color(0xFFE8F1EC)
             ),
-            quoteFontFamily = PlayfairDisplayFontFamily,
-            bodyFontFamily = InterFontFamily,
+            quoteFontFamily = FontFamily.Cursive,
+            bodyFontFamily = FontFamily.Serif,
             backgroundColor = Color(0xFF0B1B15),
             surfaceColor = Color(0xFF132A22),
             primaryAccent = Color(0xFFE2C46C),
@@ -84,7 +85,7 @@ data class ThemePreset(
         val NordicTwilight = ThemePreset(
             id = "nordic_twilight",
             name = "Nordic Twilight",
-            description = "Cool moody navy slate with soft lavender accents and silver typography.",
+            description = "Cool moody navy slate with soft lavender accents and sleek modern sans-serif.",
             colorScheme = AurelianDarkColorScheme.copy(
                 background = Color(0xFF141923),
                 surface = Color(0xFF1E2534),
@@ -92,8 +93,8 @@ data class ThemePreset(
                 onBackground = Color(0xFFE5E9F0),
                 onSurface = Color(0xFFE5E9F0)
             ),
-            quoteFontFamily = PlayfairDisplayFontFamily,
-            bodyFontFamily = InterFontFamily,
+            quoteFontFamily = FontFamily.SansSerif,
+            bodyFontFamily = FontFamily.SansSerif,
             backgroundColor = Color(0xFF141923),
             surfaceColor = Color(0xFF1E2534),
             primaryAccent = Color(0xFFC8D3F5),
@@ -105,7 +106,7 @@ data class ThemePreset(
         val BespokeEspresso = ThemePreset(
             id = "bespoke_espresso",
             name = "Bespoke Espresso",
-            description = "Rich dark roast coffee canvas with terracotta copper and warm cream typography.",
+            description = "Rich dark roast coffee canvas with terracotta copper and typewriter monospaced font.",
             colorScheme = AurelianDarkColorScheme.copy(
                 background = Color(0xFF1E1614),
                 surface = Color(0xFF2C2220),
@@ -113,8 +114,8 @@ data class ThemePreset(
                 onBackground = Color(0xFFF5ECE8),
                 onSurface = Color(0xFFF5ECE8)
             ),
-            quoteFontFamily = PlayfairDisplayFontFamily,
-            bodyFontFamily = InterFontFamily,
+            quoteFontFamily = FontFamily.Monospace,
+            bodyFontFamily = FontFamily.SansSerif,
             backgroundColor = Color(0xFF1E1614),
             surfaceColor = Color(0xFF2C2220),
             primaryAccent = Color(0xFFD98A6C),
@@ -126,7 +127,7 @@ data class ThemePreset(
         val CrimsonDynasty = ThemePreset(
             id = "crimson_dynasty",
             name = "Crimson Dynasty",
-            description = "Deep burgundy plum void with rose gold accents and soft pearl typography.",
+            description = "Deep burgundy plum void with rose gold accents and romantic calligraphic script.",
             colorScheme = AurelianDarkColorScheme.copy(
                 background = Color(0xFF1F0E17),
                 surface = Color(0xFF2E1724),
@@ -134,8 +135,8 @@ data class ThemePreset(
                 onBackground = Color(0xFFF7ECF2),
                 onSurface = Color(0xFFF7ECF2)
             ),
-            quoteFontFamily = PlayfairDisplayFontFamily,
-            bodyFontFamily = InterFontFamily,
+            quoteFontFamily = FontFamily.Cursive,
+            bodyFontFamily = FontFamily.Serif,
             backgroundColor = Color(0xFF1F0E17),
             surfaceColor = Color(0xFF2E1724),
             primaryAccent = Color(0xFFF2A6B4),
@@ -147,7 +148,7 @@ data class ThemePreset(
         val SereneSanctuary = ThemePreset(
             id = "serene_sanctuary",
             name = "Serene Sanctuary",
-            description = "Weightless pastel sanctuary with soothing cool tones.",
+            description = "Weightless pastel sanctuary with soothing cool tones and clean sans-serif.",
             colorScheme = AurelianLightColorScheme.copy(
                 background = Color(0xFFF8F9FB),
                 surface = Color(0xFFFFFFFF),
@@ -156,8 +157,8 @@ data class ThemePreset(
                 onBackground = Color(0xFF2C3437),
                 onSurface = Color(0xFF2C3437)
             ),
-            quoteFontFamily = PlayfairDisplayFontFamily,
-            bodyFontFamily = InterFontFamily,
+            quoteFontFamily = FontFamily.SansSerif,
+            bodyFontFamily = FontFamily.SansSerif,
             backgroundColor = Color(0xFFF8F9FB),
             surfaceColor = Color(0xFFFFFFFF),
             primaryAccent = Color(0xFF3F618B),
@@ -169,7 +170,7 @@ data class ThemePreset(
         val EditorialParchment = ThemePreset(
             id = "editorial_parchment",
             name = "Editorial Parchment",
-            description = "Classic newsprint and textured physical monograph feel.",
+            description = "Classic newsprint and physical monograph paper feel with literary serif.",
             colorScheme = AurelianLightColorScheme.copy(
                 background = Color(0xFFF5F2EB),
                 surface = Color(0xFFEFECE4),
@@ -177,8 +178,8 @@ data class ThemePreset(
                 onBackground = Color(0xFF1C1B1B),
                 onSurface = Color(0xFF1C1B1B)
             ),
-            quoteFontFamily = PlayfairDisplayFontFamily,
-            bodyFontFamily = InterFontFamily,
+            quoteFontFamily = FontFamily.Serif,
+            bodyFontFamily = FontFamily.SansSerif,
             backgroundColor = Color(0xFFF5F2EB),
             surfaceColor = Color(0xFFEFECE4),
             primaryAccent = Color(0xFF735C00),
