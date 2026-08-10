@@ -91,7 +91,7 @@ fun GalleryScreen(
         )
     }
 
-    QuotelyTheme(preset = ThemePreset.QuoteCornClassic) {
+    QuotelyTheme(preset = ThemePreset.CreatorsChoice) {
         Scaffold(
             floatingActionButton = {
                 if (uiState.quotes.isNotEmpty()) {

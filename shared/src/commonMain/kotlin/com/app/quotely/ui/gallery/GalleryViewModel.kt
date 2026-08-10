@@ -98,7 +98,7 @@ class GalleryViewModel(
                 author = "Seneca",
                 source = "Letters from a Stoic",
                 tagIds = listOf("1", "4"),
-                themePresetId = "aurelian_monolith",
+                themePresetId = "creators_choice",
                 createdAt = 1700000000000L
             ),
             Quote(

@@ -35,24 +35,24 @@ data class ThemePreset(
         )
 
     companion object {
-        val QuoteCornClassic = ThemePreset(
-            id = "quotecorn_classic",
-            name = "QuoteCorn Classic",
-            description = "Signature QuoteCorn brand aesthetic. Radiant warm gold glow paired with classical editorial serif typography.",
+        val CreatorsChoice = ThemePreset(
+            id = "creators_choice",
+            name = "Creator's Choice",
+            description = "Signature Creator's Choice aesthetic. Solid pitch black void, Playfair Display serif typography, and radiant Golden text.",
             colorScheme = AurelianDarkColorScheme.copy(
-                background = Color(0xFF161208),
-                surface = Color(0xFF3D3012),
-                primary = Color(0xFFF5C542),
-                onBackground = Color(0xFFFAF4E8),
-                onSurface = Color(0xFFFAF4E8)
+                background = Color(0xFF000000),
+                surface = Color(0xFF000000),
+                primary = Color(0xFFD4AF37),
+                onBackground = Color(0xFFD4AF37),
+                onSurface = Color(0xFFD4AF37)
             ),
-            quoteFontFamily = FontFamily.Serif,
-            bodyFontFamily = FontFamily.SansSerif,
-            backgroundColor = Color(0xFF161208),
-            surfaceColor = Color(0xFF3D3012),
-            primaryAccent = Color(0xFFF5C542),
-            textColor = Color(0xFFFAF4E8),
-            attributionColor = Color(0xFFD4AF37),
+            quoteFontFamily = PlayfairDisplayFontFamily,
+            bodyFontFamily = InterFontFamily,
+            backgroundColor = Color(0xFF000000),
+            surfaceColor = Color(0xFF000000),
+            primaryAccent = Color(0xFFD4AF37),
+            textColor = Color(0xFFD4AF37),
+            attributionColor = Color(0xFFB89628),
             isDark = true
         )
 
@@ -118,7 +118,7 @@ data class ThemePreset(
             name = "Nordic Twilight",
             description = "Cool moody navy slate with soft lavender accents and Scandinavian minimalist monospaced font.",
             colorScheme = AurelianDarkColorScheme.copy(
-                background = Color(0xFF0F131C),
+                background = Color(0xFF141923),
                 surface = Color(0xFF222B3F),
                 primary = Color(0xFFC8D3F5),
                 onBackground = Color(0xFFE5E9F0),
@@ -126,7 +126,7 @@ data class ThemePreset(
             ),
             quoteFontFamily = FontFamily.Monospace,
             bodyFontFamily = FontFamily.SansSerif,
-            backgroundColor = Color(0xFF0F131C),
+            backgroundColor = Color(0xFF141923),
             surfaceColor = Color(0xFF222B3F),
             primaryAccent = Color(0xFFC8D3F5),
             textColor = Color(0xFFE5E9F0),
@@ -219,10 +219,10 @@ data class ThemePreset(
             isDark = false
         )
 
-        val Default: ThemePreset = QuoteCornClassic
+        val Default: ThemePreset = CreatorsChoice
 
         val availablePresets: List<ThemePreset> = listOf(
-            QuoteCornClassic,
+            CreatorsChoice,
             AurelianMonolith,
             MidnightObsidian,
             RoyalEmerald,
