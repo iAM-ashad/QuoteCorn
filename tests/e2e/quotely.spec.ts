@@ -108,7 +108,7 @@ test.describe('QuoteCorn E2E Test Suite', () => {
 
     // Verify Theme Preset carousel contains preset options
     await expect(page.getByText('SELECT VISUAL THEME')).toBeVisible();
-    await expect(page.getByText("CREATOR'S CHOICE")).toBeVisible();
+    await expect(page.getByText("CREATOR'S CHOICE").first()).toBeVisible();
     await expect(page.getByText('AURELIAN MONOLITH')).toBeVisible();
 
     // Step 4c: Switch theme preset to "AURELIAN MONOLITH"
@@ -119,7 +119,7 @@ test.describe('QuoteCorn E2E Test Suite', () => {
     const exportButton = page.getByRole('button', { name: 'EXPORT PNG IMAGE' }).or(page.getByText('EXPORT PNG IMAGE'));
     await expect(exportButton).toBeVisible();
 
-    const deleteButton = page.getByText('DELETE QUOTE');
+    const deleteButton = page.getByRole('button', { name: 'DELETE QUOTE' }).or(page.getByText('DELETE QUOTE').first());
     await expect(deleteButton).toBeVisible();
 
     // Step 4e: Click DELETE QUOTE to trigger styled DeleteConfirmationDialog

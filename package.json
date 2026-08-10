@@ -1,0 +1,12 @@
+{
+  "name": "quotecorn",
+  "version": "1.0.0",
+  "description": "QuoteCorn KMP & Playwright E2E Test Suite",
+  "scripts": {
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "typescript": "^5.0.0"
+  }
+}

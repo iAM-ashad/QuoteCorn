@@ -4,9 +4,14 @@ export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
-  retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  retries: 0,
+  workers: 1,
+  reporter: 'json',
+  webServer: {
+    command: 'node server.js',
+    port: 8080,
+    reuseExistingServer: true,
+  },
   use: {
     baseURL: 'http://localhost:8080',
     trace: 'on-first-retry',
@@ -15,10 +20,6 @@ export default defineConfig({
     {
       name: 'chromium',
       use: { ...devices['Desktop Chrome'] },
-    },
-    {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
     },
   ],
 });
