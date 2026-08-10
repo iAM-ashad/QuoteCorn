@@ -34,8 +34,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.app.quotely.domain.model.Quote
 import com.app.quotely.ui.components.DeleteConfirmationDialog
@@ -118,24 +122,63 @@ fun GalleryScreen(
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Centered QuoteCorn Editorial Header Bar
+                // Bold Monolithic QuoteCorn Editorial Brand Header
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 12.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
+                    // Golden Monogram Icon
                     Text(
-                        text = "QuoteCorn",
-                        style = typography.quoteDisplayMobile.copy(fontSize = 28.sp),
-                        color = Color.White,
-                        textAlign = TextAlign.Center
-                    )
-                    Spacer(modifier = Modifier.height(2.dp))
-                    Text(
-                        text = "CAPTURE WHAT MOVES YOU",
-                        style = typography.uiLabel.copy(fontSize = 9.sp, letterSpacing = 0.15.sp),
+                        text = "“ ”",
+                        style = typography.quoteDisplay.copy(fontSize = 36.sp),
                         color = WarmGold,
                         textAlign = TextAlign.Center
                     )
+
+                    Spacer(modifier = Modifier.height(2.dp))
+
+                    // Majestic Bold Brand Title
+                    Text(
+                        text = "QUOTECORN",
+                        style = typography.quoteDisplay.copy(
+                            fontSize = 38.sp,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 0.12.em
+                        ),
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    // Editorial Flanked Tagline
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        HorizontalDivider(
+                            modifier = Modifier.width(32.dp),
+                            thickness = 1.dp,
+                            color = WarmGold.copy(alpha = 0.5f)
+                        )
+                        Text(
+                            text = "CAPTURE WHAT MOVES YOU",
+                            style = typography.uiButton.copy(
+                                fontSize = 10.sp,
+                                letterSpacing = 0.2.em,
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                            color = WarmGold,
+                            textAlign = TextAlign.Center
+                        )
+                        HorizontalDivider(
+                            modifier = Modifier.width(32.dp),
+                            thickness = 1.dp,
+                            color = WarmGold.copy(alpha = 0.5f)
+                        )
+                    }
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
