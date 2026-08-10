@@ -73,7 +73,16 @@ class GalleryViewModel(
     fun deleteQuote(quoteId: String) {
         viewModelScope.launch {
             repository.deleteQuote(quoteId)
+            showUserMessage("Quote removed from your collection.")
         }
+    }
+
+    fun showUserMessage(message: String) {
+        _uiState.update { it.copy(userMessage = message) }
+    }
+
+    fun clearUserMessage() {
+        _uiState.update { it.copy(userMessage = null) }
     }
 
     private fun filterQuotes(quotes: List<Quote>, query: String, tagId: String?): List<Quote> {

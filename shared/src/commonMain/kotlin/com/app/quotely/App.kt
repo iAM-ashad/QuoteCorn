@@ -100,7 +100,8 @@ fun QuotelyApp(
                     currentScreen = Screen.QuoteDetail(selectedQuote)
                 },
                 onDeleteQuote = galleryViewModel::deleteQuote,
-                onCreateQuoteClick = { currentScreen = Screen.CreateQuote }
+                onCreateQuoteClick = { currentScreen = Screen.CreateQuote },
+                onClearUserMessage = galleryViewModel::clearUserMessage
             )
         }
 
@@ -117,6 +118,7 @@ fun QuotelyApp(
                 onThemeSelect = createQuoteViewModel::onThemePresetSelect,
                 onSaveClick = {
                     createQuoteViewModel.saveQuote()
+                    galleryViewModel.showUserMessage("Quote captured successfully to your sanctuary.")
                     currentScreen = Screen.Gallery
                 },
                 onBackClick = { currentScreen = Screen.Gallery }

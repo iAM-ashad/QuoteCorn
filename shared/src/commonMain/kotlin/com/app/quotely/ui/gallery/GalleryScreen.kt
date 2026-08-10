@@ -44,6 +44,11 @@ import com.app.quotely.ui.theme.QuotelyTheme
 import com.app.quotely.ui.theme.ThemePreset
 import com.app.quotely.ui.theme.WarmGold
 
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.runtime.LaunchedEffect
+import com.app.quotely.ui.components.QuotelySnackbar
+
 /**
  * Pure stateless composable for the Masonry Gallery Feed with aesthetic empty state.
  */
@@ -55,10 +60,19 @@ fun GalleryScreen(
     onQuoteClick: (Quote) -> Unit,
     onDeleteQuote: (String) -> Unit,
     onCreateQuoteClick: () -> Unit,
+    onClearUserMessage: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     val typography = LocalQuotelyTypography.current
     var quoteToDeleteId by remember { mutableStateOf<String?>(null) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    uiState.userMessage?.let { msg ->
+        LaunchedEffect(msg) {
+            snackbarHostState.showSnackbar(msg)
+            onClearUserMessage()
+        }
+    }
 
     // Delete Confirmation Dialog
     quoteToDeleteId?.let { id ->
@@ -73,6 +87,11 @@ fun GalleryScreen(
 
     QuotelyTheme(preset = ThemePreset.CreatorsChoice) {
         Scaffold(
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState) { data ->
+                    QuotelySnackbar(snackbarData = data)
+                }
+            },
             floatingActionButton = {
                 if (uiState.quotes.isNotEmpty()) {
                     FloatingActionButton(

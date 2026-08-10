@@ -12,5 +12,6 @@ data class GalleryUiState(
     val selectedTagId: String? = null,
     val searchQuery: String = "",
     val isLoading: Boolean = false,
-    val selectedQuoteForFocus: Quote? = null
+    val selectedQuoteForFocus: Quote? = null,
+    val userMessage: String? = null
 )
