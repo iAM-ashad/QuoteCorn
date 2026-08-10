@@ -119,24 +119,24 @@ fun GalleryScreen(
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Editorial Header Bar (Clean Positioning)
-                Row(
+                // Centered QuoteCorn Editorial Header Bar
+                Column(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column {
-                        Text(
-                            text = "QUOTELY",
-                            style = typography.quoteDisplayMobile.copy(fontSize = 26.sp),
-                            color = Color.White
-                        )
-                        Text(
-                            text = "AURELIAN MONOLITH GALLERY",
-                            style = typography.uiLabel.copy(fontSize = 9.sp, letterSpacing = 0.15.sp),
-                            color = WarmGold
-                        )
-                    }
+                    Text(
+                        text = "QuoteCorn",
+                        style = typography.quoteDisplayMobile.copy(fontSize = 28.sp),
+                        color = Color.White,
+                        textAlign = TextAlign.Center
+                    )
+                    Spacer(modifier = Modifier.height(2.dp))
+                    Text(
+                        text = "AN AESTHETICALLY PLEASING QUOTES APP",
+                        style = typography.uiLabel.copy(fontSize = 9.sp, letterSpacing = 0.15.sp),
+                        color = WarmGold,
+                        textAlign = TextAlign.Center
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
