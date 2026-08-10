@@ -246,7 +246,8 @@ fun QuoteDetailScreen(
                         isDeleting = uiState.isDeleting,
                         onThemeSelect = onThemeSelect,
                         onExportClick = { onExportClick(textMeasurer) },
-                        onDeleteClick = { showDeleteDialog = true }
+                        onDeleteClick = { showDeleteDialog = true },
+                        onDismissPanel = onToggleControls
                     )
                 }
             }
