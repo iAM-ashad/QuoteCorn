@@ -233,30 +233,6 @@ fun QuoteDetailScreen(
                     onToggleControls = onToggleControls
                 )
 
-                // Top Controls Bar
-                AnimatedVisibility(
-                    visible = uiState.isControlsVisible,
-                    enter = fadeIn() + slideInVertically { -it },
-                    exit = fadeOut() + slideOutVertically { -it },
-                    modifier = Modifier.align(Alignment.TopCenter)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color(0xFF131313).copy(alpha = 0.85f))
-                            .padding(horizontal = 16.dp, vertical = 8.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        TextButton(onClick = onBackClick) {
-                            Text(
-                                text = "← BACK TO GALLERY",
-                                style = typography.uiButton.copy(fontSize = 12.sp),
-                                color = Color.White
-                            )
-                        }
-                    }
-                }
-
                 // Bottom Controls Toolbar
                 AnimatedVisibility(
                     visible = uiState.isControlsVisible,
