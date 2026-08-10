@@ -68,7 +68,7 @@ class ImageExporter {
                 size = size
             )
 
-            // 3. Measure & Draw Quote Text (Playfair Display Serif)
+            // 3. Measure & Draw Quote Text
             val quoteFontSize = if (quote.text.length > 100) 36.sp else 46.sp
             val quoteConstraints = Constraints(maxWidth = (width - 160))
 
@@ -76,6 +76,8 @@ class ImageExporter {
                 text = AnnotatedString("“${quote.text}”"),
                 style = TextStyle(
                     fontFamily = themePreset.quoteFontFamily,
+                    fontWeight = themePreset.quoteFontWeight,
+                    fontStyle = themePreset.quoteFontStyle,
                     fontSize = quoteFontSize,
                     color = themePreset.textColor,
                     textAlign = TextAlign.Center
@@ -92,7 +94,7 @@ class ImageExporter {
                 )
             )
 
-            // 4. Draw Warm Gold Center Accent Divider Line
+            // 4. Draw Accent Divider Line
             val dividerY = quoteY + measuredQuote.size.height + 40f
             val centerX = width / 2f
             drawLine(
@@ -107,6 +109,8 @@ class ImageExporter {
                 text = AnnotatedString("— ${quote.author.uppercase()}"),
                 style = TextStyle(
                     fontFamily = themePreset.bodyFontFamily,
+                    fontWeight = themePreset.bodyFontWeight,
+                    letterSpacing = themePreset.bodyLetterSpacing,
                     fontSize = 24.sp,
                     color = themePreset.attributionColor,
                     textAlign = TextAlign.Center

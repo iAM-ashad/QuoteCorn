@@ -59,8 +59,11 @@ fun FocusQuoteCanvas(
             // Quote Text
             Text(
                 text = "“${quote.text}”",
-                style = if (quote.text.length > 120) typography.quoteBody.copy(fontSize = 22.sp, lineHeight = 32.sp)
-                else typography.quoteDisplayMobile.copy(fontSize = 32.sp, lineHeight = 44.sp),
+                style = (if (quote.text.length > 120) typography.quoteBody.copy(fontSize = 22.sp, lineHeight = 32.sp)
+                else typography.quoteDisplayMobile.copy(fontSize = 32.sp, lineHeight = 44.sp)).copy(
+                    fontWeight = themePreset.quoteFontWeight,
+                    fontStyle = themePreset.quoteFontStyle
+                ),
                 color = themePreset.textColor,
                 fontFamily = themePreset.quoteFontFamily,
                 textAlign = TextAlign.Center
@@ -80,7 +83,11 @@ fun FocusQuoteCanvas(
             // Attribution & Source
             Text(
                 text = quote.author.uppercase(),
-                style = typography.attribution.copy(fontSize = 14.sp),
+                style = typography.attribution.copy(
+                    fontSize = 14.sp,
+                    fontWeight = themePreset.bodyFontWeight,
+                    letterSpacing = themePreset.bodyLetterSpacing
+                ),
                 color = themePreset.attributionColor,
                 fontFamily = themePreset.bodyFontFamily,
                 textAlign = TextAlign.Center

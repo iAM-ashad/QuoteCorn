@@ -60,7 +60,12 @@ fun QuoteGridCard(
             // Quote Text
             Text(
                 text = "“${quote.text}”",
-                style = typography.quoteBody.copy(fontSize = 18.sp, lineHeight = 26.sp),
+                style = typography.quoteBody.copy(
+                    fontSize = 18.sp,
+                    lineHeight = 26.sp,
+                    fontWeight = themePreset.quoteFontWeight,
+                    fontStyle = themePreset.quoteFontStyle
+                ),
                 color = themePreset.textColor,
                 fontFamily = themePreset.quoteFontFamily
             )
@@ -88,7 +93,11 @@ fun QuoteGridCard(
                 ) {
                     Text(
                         text = quote.author.uppercase(),
-                        style = typography.attribution.copy(fontSize = 12.sp),
+                        style = typography.attribution.copy(
+                            fontSize = 12.sp,
+                            fontWeight = themePreset.bodyFontWeight,
+                            letterSpacing = themePreset.bodyLetterSpacing
+                        ),
                         color = themePreset.attributionColor,
                         fontFamily = themePreset.bodyFontFamily
                     )

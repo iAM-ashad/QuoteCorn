@@ -61,7 +61,10 @@ fun LiveQuotePreviewCard(
             // Quote Text
             Text(
                 text = "“$displayText”",
-                style = if (displayText.length > 100) typography.quoteBody else typography.quoteDisplayMobile,
+                style = (if (displayText.length > 100) typography.quoteBody else typography.quoteDisplayMobile).copy(
+                    fontWeight = themePreset.quoteFontWeight,
+                    fontStyle = themePreset.quoteFontStyle
+                ),
                 color = themePreset.textColor,
                 fontFamily = themePreset.quoteFontFamily
             )
@@ -84,7 +87,10 @@ fun LiveQuotePreviewCard(
             ) {
                 Text(
                     text = displayAuthor,
-                    style = typography.attribution,
+                    style = typography.attribution.copy(
+                        fontWeight = themePreset.bodyFontWeight,
+                        letterSpacing = themePreset.bodyLetterSpacing
+                    ),
                     color = themePreset.attributionColor,
                     fontFamily = themePreset.bodyFontFamily,
                     textAlign = TextAlign.End
