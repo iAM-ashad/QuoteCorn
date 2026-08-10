@@ -2,9 +2,11 @@ package com.app.quotely.ui.editor
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.quotely.domain.model.DefaultTags
 import com.app.quotely.domain.model.Quote
 import com.app.quotely.domain.model.Tag
 import com.app.quotely.domain.repository.QuoteRepository
+import com.app.quotely.ui.theme.ThemePreset
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -26,12 +28,7 @@ class CreateQuoteViewModel(
         viewModelScope.launch {
             repository.getTags().collect { tags ->
                 if (tags.isEmpty()) {
-                    val defaultTags = listOf(
-                        Tag("1", "Philosophy", "#D4AF37"),
-                        Tag("2", "Mindfulness", "#BFCDFF"),
-                        Tag("3", "Literature", "#C6C6C7"),
-                        Tag("4", "Stoicism", "#E5E2E1")
-                    )
+                    val defaultTags = DefaultTags.list
                     defaultTags.forEach { repository.saveTag(it) }
                     _uiState.update { it.copy(availableTags = defaultTags) }
                 } else {
@@ -65,39 +62,38 @@ class CreateQuoteViewModel(
     }
 
     fun onThemePresetSelect(presetId: String) {
-        _uiState.update { it.copy(selectedThemePresetId = presetId) }
-    }
-
-    fun saveQuote() {
-        val state = _uiState.value
-        if (state.quoteText.isBlank()) return
-
-        viewModelScope.launch {
-            _uiState.update { it.copy(isSaving = true) }
-            val newQuote = Quote(
-                id = "quote_" + (100000..999999).random(),
-                text = state.quoteText.trim(),
-                author = if (state.authorText.isBlank()) "Anonymous" else state.authorText.trim(),
-                source = if (state.sourceText.isBlank()) null else state.sourceText.trim(),
-                tagIds = state.selectedTagIds.toList(),
-                themePresetId = state.selectedThemePresetId,
-                createdAt = 1700000000000L
-            )
-            val result = repository.saveQuote(newQuote)
-            if (result.isSuccess) {
-                _uiState.update { it.copy(isSaving = false, isSaveSuccess = true) }
-            } else {
-                _uiState.update {
-                    it.copy(
-                        isSaving = false,
-                        errorMessage = result.exceptionOrNull()?.message ?: "Failed to save quote"
-                    )
-                }
-            }
+        _uiState.update {
+            it.copy(selectedThemePresetId = presetId)
         }
     }
 
-    fun resetSaveSuccess() {
-        _uiState.update { it.copy(isSaveSuccess = false) }
+    fun saveQuote() {
+        val current = _uiState.value
+        if (current.quoteText.isBlank()) return
+
+        val newQuote = Quote(
+            id = "quote_${(100000..999999).random()}",
+            text = current.quoteText.trim(),
+            author = if (current.authorText.isBlank()) "Anonymous" else current.authorText.trim(),
+            source = current.sourceText.trim().ifEmpty { null },
+            tagIds = current.selectedTagIds.toList(),
+            themePresetId = current.selectedThemePresetId,
+            createdAt = 1700000000000L
+        )
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isSaving = true) }
+            repository.saveQuote(newQuote)
+            _uiState.update {
+                it.copy(
+                    isSaving = false,
+                    isSaveSuccess = true,
+                    quoteText = "",
+                    authorText = "",
+                    sourceText = "",
+                    selectedTagIds = emptySet()
+                )
+            }
+        }
     }
 }

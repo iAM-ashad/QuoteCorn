@@ -2,6 +2,7 @@ package com.app.quotely.ui.gallery
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.quotely.domain.model.DefaultTags
 import com.app.quotely.domain.model.Quote
 import com.app.quotely.domain.model.Tag
 import com.app.quotely.domain.repository.QuoteRepository
@@ -39,7 +40,7 @@ class GalleryViewModel(
                     _uiState.update { state ->
                         state.copy(
                             quotes = filterQuotes(quotes, state.searchQuery, state.selectedTagId),
-                            tags = tags,
+                            tags = if (tags.isEmpty()) DefaultTags.list else tags,
                             isLoading = false
                         )
                     }
@@ -67,10 +68,6 @@ class GalleryViewModel(
         }
     }
 
-    fun selectQuoteForFocus(quote: Quote?) {
-        _uiState.update { it.copy(selectedQuoteForFocus = quote) }
-    }
-
     fun deleteQuote(quoteId: String) {
         viewModelScope.launch {
             repository.deleteQuote(quoteId)
@@ -89,12 +86,7 @@ class GalleryViewModel(
     }
 
     private suspend fun seedSampleQuotes() {
-        val sampleTags = listOf(
-            Tag("1", "Philosophy", "#D4AF37"),
-            Tag("2", "Mindfulness", "#BFCDFF"),
-            Tag("3", "Literature", "#C6C6C7"),
-            Tag("4", "Stoicism", "#E5E2E1")
-        )
+        val sampleTags = DefaultTags.list
         sampleTags.forEach { repository.saveTag(it) }
 
         val sampleQuotes = listOf(
@@ -121,7 +113,7 @@ class GalleryViewModel(
                 text = "It is never too late to be what you might have been.",
                 author = "George Eliot",
                 source = "Selected Essays",
-                tagIds = listOf("3"),
+                tagIds = listOf("3", "5"),
                 themePresetId = "editorial_parchment",
                 createdAt = 1700000002000L
             ),
@@ -130,9 +122,45 @@ class GalleryViewModel(
                 text = "He who has a why to live can bear almost any how.",
                 author = "Friedrich Nietzsche",
                 source = "Twilight of the Idols",
-                tagIds = listOf("1"),
+                tagIds = listOf("1", "8"),
                 themePresetId = "aurelian_monolith",
                 createdAt = 1700000003000L
+            ),
+            Quote(
+                id = "sample_5",
+                text = "The wound is the place where the Light enters you.",
+                author = "Rumi",
+                source = "The Masnavi",
+                tagIds = listOf("7", "9"),
+                themePresetId = "serene_sanctuary",
+                createdAt = 1700000004000L
+            ),
+            Quote(
+                id = "sample_6",
+                text = "When we are no longer able to change a situation, we are challenged to change ourselves.",
+                author = "Viktor E. Frankl",
+                source = "Man's Search for Meaning",
+                tagIds = listOf("2", "5"),
+                themePresetId = "aurelian_monolith",
+                createdAt = 1700000005000L
+            ),
+            Quote(
+                id = "sample_7",
+                text = "Be yourself; everyone else is already taken.",
+                author = "Oscar Wilde",
+                source = "Phrases and Philosophies",
+                tagIds = listOf("3", "7"),
+                themePresetId = "editorial_parchment",
+                createdAt = 1700000006000L
+            ),
+            Quote(
+                id = "sample_8",
+                text = "The only way to do great work is to love what you do.",
+                author = "Steve Jobs",
+                source = "Stanford Commencement",
+                tagIds = listOf("6", "10"),
+                themePresetId = "midnight_obsidian",
+                createdAt = 1700000007000L
             )
         )
         sampleQuotes.forEach { repository.saveQuote(it) }
