@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.quotely.domain.model.DefaultTags
 import com.app.quotely.domain.model.Quote
-import com.app.quotely.domain.model.Tag
 import com.app.quotely.domain.repository.QuoteRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -21,6 +20,7 @@ class GalleryViewModel(
     val uiState: StateFlow<GalleryUiState> = _uiState.asStateFlow()
 
     private var allQuotesCache: List<Quote> = emptyList()
+    private var hasCheckedInitialSeed = false
 
     init {
         observeData()
@@ -33,9 +33,11 @@ class GalleryViewModel(
                 repository.getQuotes(),
                 repository.getTags()
             ) { quotes, tags ->
-                if (quotes.isEmpty()) {
+                if (!hasCheckedInitialSeed && quotes.isEmpty() && tags.isEmpty()) {
+                    hasCheckedInitialSeed = true
                     seedSampleQuotes()
                 } else {
+                    hasCheckedInitialSeed = true
                     allQuotesCache = quotes
                     _uiState.update { state ->
                         state.copy(

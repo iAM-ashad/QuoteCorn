@@ -16,6 +16,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.OutlinedTextField
@@ -41,7 +43,7 @@ import com.app.quotely.ui.theme.ThemePreset
 import com.app.quotely.ui.theme.WarmGold
 
 /**
- * Pure stateless composable for the Masonry Gallery Feed with delete confirmation dialog.
+ * Pure stateless composable for the Masonry Gallery Feed with aesthetic empty state.
  */
 @Composable
 fun GalleryScreen(
@@ -92,17 +94,19 @@ fun GalleryScreen(
     QuotelyTheme(preset = ThemePreset.AurelianMonolith) {
         Scaffold(
             floatingActionButton = {
-                FloatingActionButton(
-                    onClick = onCreateQuoteClick,
-                    containerColor = WarmGold,
-                    contentColor = Color(0xFF3C2F00),
-                    shape = RoundedCornerShape(0.dp)
-                ) {
-                    Text(
-                        text = "+",
-                        style = typography.quoteDisplayMobile.copy(fontSize = 28.sp),
-                        textAlign = TextAlign.Center
-                    )
+                if (uiState.quotes.isNotEmpty()) {
+                    FloatingActionButton(
+                        onClick = onCreateQuoteClick,
+                        containerColor = WarmGold,
+                        contentColor = Color(0xFF3C2F00),
+                        shape = RoundedCornerShape(0.dp)
+                    ) {
+                        Text(
+                            text = "+",
+                            style = typography.quoteDisplayMobile.copy(fontSize = 28.sp),
+                            textAlign = TextAlign.Center
+                        )
+                    }
                 }
             },
             containerColor = Color(0xFF131313)
@@ -184,18 +188,45 @@ fun GalleryScreen(
                                 .weight(1f),
                             contentAlignment = Alignment.Center
                         ) {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Column(
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(24.dp)
+                            ) {
                                 Text(
-                                    text = "NO QUOTES FOUND",
-                                    style = typography.uiButton.copy(fontSize = 14.sp),
-                                    color = Color.White.copy(alpha = 0.5f)
+                                    text = "“ ”",
+                                    style = typography.quoteDisplayMobile.copy(fontSize = 54.sp),
+                                    color = WarmGold
                                 )
-                                Spacer(modifier = Modifier.height(6.dp))
+                                Spacer(modifier = Modifier.height(12.dp))
                                 Text(
-                                    text = "Tap + to capture your first thought.",
-                                    style = typography.uiLabel,
-                                    color = Color.White.copy(alpha = 0.3f)
+                                    text = "YOUR SANCTUARY IS EMPTY",
+                                    style = typography.quoteDisplayMobile.copy(fontSize = 20.sp),
+                                    color = Color.White,
+                                    textAlign = TextAlign.Center
                                 )
+                                Spacer(modifier = Modifier.height(8.dp))
+                                Text(
+                                    text = "Capture timeless wisdom, excerpts, and thoughts to build your personal sanctuary.",
+                                    style = typography.uiLabel.copy(fontSize = 12.sp),
+                                    color = Color.White.copy(alpha = 0.6f),
+                                    textAlign = TextAlign.Center,
+                                    modifier = Modifier.padding(horizontal = 16.dp)
+                                )
+                                Spacer(modifier = Modifier.height(24.dp))
+                                Button(
+                                    onClick = onCreateQuoteClick,
+                                    colors = ButtonDefaults.buttonColors(
+                                        containerColor = WarmGold,
+                                        contentColor = Color(0xFF3C2F00)
+                                    ),
+                                    shape = RoundedCornerShape(0.dp),
+                                    contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
+                                ) {
+                                    Text(
+                                        text = "+ CREATE YOUR FIRST QUOTE",
+                                        style = typography.uiButton.copy(fontSize = 12.sp)
+                                    )
+                                }
                             }
                         }
                     }
