@@ -1,6 +1,7 @@
 package com.app.quotely.ui.gallery
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -120,13 +121,32 @@ fun GalleryScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Search Bar Input
+                // Search Bar Input with Clear Search Icon Button
                 OutlinedTextField(
                     value = uiState.searchQuery,
                     onValueChange = onSearchQueryChange,
                     placeholder = { Text("Search quotes, authors, or sources...", style = typography.uiLabel) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true,
+                    leadingIcon = {
+                        Text(
+                            text = "⌕",
+                            style = typography.quoteDisplayMobile.copy(fontSize = 20.sp),
+                            color = WarmGold
+                        )
+                    },
+                    trailingIcon = {
+                        if (uiState.searchQuery.isNotEmpty()) {
+                            Text(
+                                text = "✕",
+                                style = typography.uiLabel.copy(fontSize = 12.sp),
+                                color = WarmGold,
+                                modifier = Modifier
+                                    .clickable { onSearchQueryChange("") }
+                                    .padding(8.dp)
+                            )
+                        }
+                    },
                     colors = OutlinedTextFieldDefaults.colors(
                         focusedBorderColor = WarmGold,
                         unfocusedBorderColor = Color.White.copy(alpha = 0.2f),

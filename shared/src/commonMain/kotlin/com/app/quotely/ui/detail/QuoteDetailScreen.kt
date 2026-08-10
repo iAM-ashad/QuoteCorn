@@ -45,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.quotely.ui.components.DeleteConfirmationDialog
 import com.app.quotely.ui.components.ExportAspectRatio
+import com.app.quotely.ui.components.QuotelySnackbar
 import com.app.quotely.ui.components.ImageSaver
 import com.app.quotely.ui.components.rememberImageSaver
 import com.app.quotely.ui.theme.LocalQuotelyTypography
@@ -197,7 +198,11 @@ fun QuoteDetailScreen(
 
     QuotelyTheme(preset = uiState.activeThemePreset) {
         Scaffold(
-            snackbarHost = { SnackbarHost(snackbarHostState) },
+            snackbarHost = {
+                SnackbarHost(hostState = snackbarHostState) { data ->
+                    QuotelySnackbar(snackbarData = data)
+                }
+            },
             containerColor = uiState.activeThemePreset.backgroundColor
         ) { innerPadding ->
             Box(
