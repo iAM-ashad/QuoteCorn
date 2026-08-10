@@ -125,7 +125,7 @@ class GalleryViewModel(
                 author = "Friedrich Nietzsche",
                 source = "Twilight of the Idols",
                 tagIds = listOf("1", "8"),
-                themePresetId = "aurelian_monolith",
+                themePresetId = "royal_emerald",
                 createdAt = 1700000003000L
             ),
             Quote(
@@ -143,7 +143,7 @@ class GalleryViewModel(
                 author = "Viktor E. Frankl",
                 source = "Man's Search for Meaning",
                 tagIds = listOf("2", "5"),
-                themePresetId = "aurelian_monolith",
+                themePresetId = "nordic_twilight",
                 createdAt = 1700000005000L
             ),
             Quote(
@@ -152,7 +152,7 @@ class GalleryViewModel(
                 author = "Oscar Wilde",
                 source = "Phrases and Philosophies",
                 tagIds = listOf("3", "7"),
-                themePresetId = "editorial_parchment",
+                themePresetId = "bespoke_espresso",
                 createdAt = 1700000006000L
             ),
             Quote(
@@ -161,7 +161,7 @@ class GalleryViewModel(
                 author = "Steve Jobs",
                 source = "Stanford Commencement",
                 tagIds = listOf("6", "10"),
-                themePresetId = "midnight_obsidian",
+                themePresetId = "crimson_dynasty",
                 createdAt = 1700000007000L
             )
         )
