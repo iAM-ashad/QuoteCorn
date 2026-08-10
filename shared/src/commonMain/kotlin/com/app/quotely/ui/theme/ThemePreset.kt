@@ -35,6 +35,27 @@ data class ThemePreset(
         )
 
     companion object {
+        val QuoteCornClassic = ThemePreset(
+            id = "quotecorn_classic",
+            name = "QuoteCorn Classic",
+            description = "Signature QuoteCorn brand aesthetic. Radiant warm gold glow paired with classical editorial serif typography.",
+            colorScheme = AurelianDarkColorScheme.copy(
+                background = Color(0xFF161208),
+                surface = Color(0xFF3D3012),
+                primary = Color(0xFFF5C542),
+                onBackground = Color(0xFFFAF4E8),
+                onSurface = Color(0xFFFAF4E8)
+            ),
+            quoteFontFamily = FontFamily.Serif,
+            bodyFontFamily = FontFamily.SansSerif,
+            backgroundColor = Color(0xFF161208),
+            surfaceColor = Color(0xFF3D3012),
+            primaryAccent = Color(0xFFF5C542),
+            textColor = Color(0xFFFAF4E8),
+            attributionColor = Color(0xFFD4AF37),
+            isDark = true
+        )
+
         val AurelianMonolith = ThemePreset(
             id = "aurelian_monolith",
             name = "Aurelian Monolith",
@@ -198,9 +219,10 @@ data class ThemePreset(
             isDark = false
         )
 
-        val Default: ThemePreset = AurelianMonolith
+        val Default: ThemePreset = QuoteCornClassic
 
         val availablePresets: List<ThemePreset> = listOf(
+            QuoteCornClassic,
             AurelianMonolith,
             MidnightObsidian,
             RoyalEmerald,
