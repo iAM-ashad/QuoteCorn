@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.app.quotely.domain.model.Quote
+import com.app.quotely.ui.components.DeleteConfirmationDialog
 import com.app.quotely.ui.theme.LocalQuotelyTypography
 import com.app.quotely.ui.theme.QuotelyTheme
 import com.app.quotely.ui.theme.ThemePreset
@@ -60,34 +61,12 @@ fun GalleryScreen(
 
     // Delete Confirmation Dialog
     quoteToDeleteId?.let { id ->
-        AlertDialog(
-            onDismissRequest = { quoteToDeleteId = null },
-            title = { Text("Delete Quote", style = typography.uiButton) },
-            text = {
-                Text(
-                    "Are you sure you want to delete this quote? This action cannot be undone.",
-                    style = typography.uiLabel
-                )
+        DeleteConfirmationDialog(
+            onConfirmDelete = {
+                onDeleteQuote(id)
+                quoteToDeleteId = null
             },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        onDeleteQuote(id)
-                        quoteToDeleteId = null
-                    }
-                ) {
-                    Text("DELETE", color = Color(0xFFFFB4AB), style = typography.uiButton)
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { quoteToDeleteId = null }) {
-                    Text("CANCEL", color = Color.White.copy(alpha = 0.7f), style = typography.uiButton)
-                }
-            },
-            containerColor = Color(0xFF201F1F),
-            titleContentColor = Color.White,
-            textContentColor = Color.White.copy(alpha = 0.8f),
-            shape = RoundedCornerShape(0.dp)
+            onDismiss = { quoteToDeleteId = null }
         )
     }
 
