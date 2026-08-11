@@ -18,6 +18,7 @@ object CarouselImageExporter {
         quotes: List<Quote>,
         maxSlides: Int = 5
     ): List<CarouselSlide> {
+        com.app.quotely.data.telemetry.WacTelemetryTracker.logAction(com.app.quotely.data.telemetry.WacTelemetryTracker.ACTION_EXPORT_CAROUSEL)
         val selectedQuotes = quotes.take(maxSlides)
         val total = selectedQuotes.size
 

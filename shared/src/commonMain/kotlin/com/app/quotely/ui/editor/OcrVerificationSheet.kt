@@ -180,6 +180,7 @@ fun OcrVerificationSheet(
 
                 Button(
                     onClick = {
+                        com.app.quotely.data.telemetry.WacTelemetryTracker.logAction(com.app.quotely.data.telemetry.WacTelemetryTracker.ACTION_CAPTURE_OCR)
                         val newQuote = Quote(
                             id = "quote_" + kotlin.random.Random.nextLong(100000, 999999),
                             text = text.trim(),

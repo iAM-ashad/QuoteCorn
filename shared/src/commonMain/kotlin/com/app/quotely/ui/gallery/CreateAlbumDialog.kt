@@ -189,6 +189,7 @@ fun CreateAlbumDialog(
 
                     Button(
                         onClick = {
+                            com.app.quotely.data.telemetry.WacTelemetryTracker.logAction(com.app.quotely.data.telemetry.WacTelemetryTracker.ACTION_CREATE_ALBUM)
                             val newAlbum = Album(
                                 id = "album_" + kotlin.random.Random.nextLong(100000, 999999),
                                 name = name.trim(),
