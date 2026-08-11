@@ -18,6 +18,7 @@ import com.app.quotely.ui.gallery.GalleryViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 
 sealed interface Screen {
@@ -32,14 +33,8 @@ sealed interface Screen {
 class InMemoryQuoteRepository : QuoteRepository {
     private val quotesFlow = MutableStateFlow<List<Quote>>(emptyList())
     private val tagsFlow = MutableStateFlow<List<Tag>>(emptyList())
-    private val albumsFlow = MutableStateFlow<List<com.app.quotely.domain.model.Album>>(
-        listOf(
-            com.app.quotely.domain.model.Album("album_ideas_changed_me", "Ideas That Changed Me", "Key insights and life-altering perspectives", "creators_choice"),
-            com.app.quotely.domain.model.Album("album_stoic_models", "Stoic Mental Models", "Ancient wisdom for modern resilience", "aurelian_monolith"),
-            com.app.quotely.domain.model.Album("album_cinematic_dialogue", "Cinematic Dialogue", "Unforgettable quotes from film & stage", "midnight_obsidian"),
-            com.app.quotely.domain.model.Album("album_ambition_leadership", "Ambition & Leadership", "Principles for building and leading", "royal_emerald")
-        )
-    )
+    private val albumsFlow = MutableStateFlow<List<com.app.quotely.domain.model.Album>>(emptyList())
+    private val quoteAlbumsMap = mutableMapOf<String, MutableSet<String>>()
 
     override fun getQuotes(): Flow<List<Quote>> = quotesFlow.asStateFlow()
 
@@ -47,7 +42,9 @@ class InMemoryQuoteRepository : QuoteRepository {
 
     override fun searchQuotes(query: String): Flow<List<Quote>> = quotesFlow.asStateFlow()
 
-    override fun getQuotesByTag(tagId: String): Flow<List<Quote>> = quotesFlow.asStateFlow()
+    override fun getQuotesByTag(tagId: String): Flow<List<Quote>> = quotesFlow.map { quotes ->
+        quotes.filter { it.tagIds.contains(tagId) }
+    }
 
     override suspend fun saveQuote(quote: Quote): Result<Unit> {
         quotesFlow.update { current ->
@@ -63,6 +60,7 @@ class InMemoryQuoteRepository : QuoteRepository {
 
     override suspend fun deleteQuote(id: String): Result<Unit> {
         quotesFlow.update { current -> current.filterNot { it.id == id } }
+        quoteAlbumsMap.remove(id)
         return Result.success(Unit)
     }
 
@@ -82,7 +80,11 @@ class InMemoryQuoteRepository : QuoteRepository {
 
     override fun getAlbums(): Flow<List<com.app.quotely.domain.model.Album>> = albumsFlow.asStateFlow()
 
-    override fun getQuotesForAlbum(albumId: String): Flow<List<Quote>> = quotesFlow.asStateFlow()
+    override fun getQuotesForAlbum(albumId: String): Flow<List<Quote>> = quotesFlow.map { quotes ->
+        quotes.filter { quote ->
+            quoteAlbumsMap[quote.id]?.contains(albumId) == true
+        }
+    }
 
     override suspend fun saveAlbum(album: com.app.quotely.domain.model.Album): Result<Unit> {
         albumsFlow.update { current ->
@@ -92,6 +94,31 @@ class InMemoryQuoteRepository : QuoteRepository {
             } else {
                 listOf(album) + current
             }
+        }
+        return Result.success(Unit)
+    }
+
+    override suspend fun addQuoteToAlbum(quoteId: String, albumId: String): Result<Unit> {
+        quoteAlbumsMap.getOrPut(quoteId) { mutableSetOf() }.add(albumId)
+        quotesFlow.update { it.toList() }
+        return Result.success(Unit)
+    }
+
+    override suspend fun removeQuoteFromAlbum(quoteId: String, albumId: String): Result<Unit> {
+        quoteAlbumsMap[quoteId]?.remove(albumId)
+        quotesFlow.update { it.toList() }
+        return Result.success(Unit)
+    }
+
+    override suspend fun seedStarterAlbumsIfEmpty(): Result<Unit> {
+        if (albumsFlow.value.isEmpty()) {
+            val starterAlbums = listOf(
+                com.app.quotely.domain.model.Album("album_ideas_changed_me", "Ideas That Changed Me", "Key insights and life-altering perspectives", "creators_choice"),
+                com.app.quotely.domain.model.Album("album_stoic_models", "Stoic Mental Models", "Ancient wisdom for modern resilience", "aurelian_monolith"),
+                com.app.quotely.domain.model.Album("album_cinematic_dialogue", "Cinematic Dialogue", "Unforgettable quotes from film & stage", "midnight_obsidian"),
+                com.app.quotely.domain.model.Album("album_ambition_leadership", "Ambition & Leadership", "Principles for building and leading", "royal_emerald")
+            )
+            albumsFlow.value = starterAlbums
         }
         return Result.success(Unit)
     }

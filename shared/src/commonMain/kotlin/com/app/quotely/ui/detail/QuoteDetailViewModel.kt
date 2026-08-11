@@ -44,8 +44,22 @@ class QuoteDetailViewModel(
                 activeThemePreset = preset,
                 isControlsVisible = true,
                 showExportModal = false,
-                exportedBitmap = null
+                exportedBitmap = null,
+                assignedAlbumIds = emptySet()
             )
+        }
+        viewModelScope.launch {
+            repository.getAlbums().collect { albums ->
+                val assigned = mutableSetOf<String>()
+                albums.forEach { album ->
+                    repository.getQuotesForAlbum(album.id).collect { albumQuotes ->
+                        if (albumQuotes.any { it.id == quote.id }) {
+                            assigned.add(album.id)
+                        }
+                    }
+                }
+                _uiState.update { it.copy(assignedAlbumIds = assigned) }
+            }
         }
     }
 

@@ -44,12 +44,12 @@ class GalleryViewModel(
                     allQuotesCache = quotes
                     _uiState.update { state ->
                         state.copy(
-                            quotes = filterQuotes(quotes, state.searchQuery, state.selectedTagId),
                             tags = if (tags.isEmpty()) DefaultTags.list else tags,
                             albums = albums,
                             isLoading = false
                         )
                     }
+                    updateFilteredQuotes()
                 }
             }.collect {}
         }
@@ -57,39 +57,42 @@ class GalleryViewModel(
 
     fun onSearchQueryChange(query: String) {
         _uiState.update { state ->
-            state.copy(
-                searchQuery = query,
-                quotes = filterQuotes(allQuotesCache, query, state.selectedTagId)
-            )
+            state.copy(searchQuery = query)
         }
+        updateFilteredQuotes()
     }
 
     fun onTagSelect(tagId: String?) {
         _uiState.update { state ->
             val newSelectedTagId = if (state.selectedTagId == tagId) null else tagId
-            state.copy(
-                selectedTagId = newSelectedTagId,
-                quotes = filterQuotes(allQuotesCache, state.searchQuery, newSelectedTagId)
-            )
+            state.copy(selectedTagId = newSelectedTagId)
         }
+        updateFilteredQuotes()
     }
 
     fun onAlbumSelect(albumId: String?) {
+        val currentSelected = _uiState.value.selectedAlbumId
+        val targetAlbumId = if (currentSelected == albumId) null else albumId
         _uiState.update { state ->
-            val newSelectedAlbumId = if (state.selectedAlbumId == albumId) null else albumId
-            state.copy(selectedAlbumId = newSelectedAlbumId)
+            state.copy(selectedAlbumId = targetAlbumId)
         }
+        updateFilteredQuotes()
+    }
+
+    private fun updateFilteredQuotes() {
+        val state = _uiState.value
+        val albumId = state.selectedAlbumId
         if (albumId != null) {
             viewModelScope.launch {
                 repository.getQuotesForAlbum(albumId).collect { albumQuotes ->
-                    _uiState.update { state ->
-                        state.copy(quotes = filterQuotes(albumQuotes, state.searchQuery, state.selectedTagId))
+                    _uiState.update { current ->
+                        current.copy(quotes = filterQuotes(albumQuotes, current.searchQuery, current.selectedTagId))
                     }
                 }
             }
         } else {
-            _uiState.update { state ->
-                state.copy(quotes = filterQuotes(allQuotesCache, state.searchQuery, state.selectedTagId))
+            _uiState.update { current ->
+                current.copy(quotes = filterQuotes(allQuotesCache, current.searchQuery, current.selectedTagId))
             }
         }
     }

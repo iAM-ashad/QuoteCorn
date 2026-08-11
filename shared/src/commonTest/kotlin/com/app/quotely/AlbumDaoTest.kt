@@ -43,6 +43,7 @@ class AlbumDaoTest {
     @Test
     fun testRepositoryAlbumOperations() = runBlocking {
         val repo = InMemoryQuoteRepository()
+        repo.seedStarterAlbumsIfEmpty()
 
         val albums = repo.getAlbums().first()
         assertTrue(albums.isNotEmpty())
