@@ -52,6 +52,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
 import com.app.quotely.ui.components.QuotelySnackbar
+import kotlinx.coroutines.launch
 
 /**
  * Pure stateless composable for the Masonry Gallery Feed with aesthetic empty state.
@@ -64,6 +65,7 @@ fun GalleryScreen(
     onQuoteClick: (Quote) -> Unit,
     onDeleteQuote: (String) -> Unit,
     onCreateQuoteClick: () -> Unit,
+    onSaveQuote: (Quote) -> Unit = {},
     onClearUserMessage: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
@@ -89,6 +91,22 @@ fun GalleryScreen(
         )
     }
 
+    var pendingOcrResult by remember { mutableStateOf<com.app.quotely.ocr.OcrResult?>(null) }
+    var isOcrScanning by remember { mutableStateOf(false) }
+
+    // OCR Verification Sheet Modal
+    pendingOcrResult?.let { ocrResult ->
+        com.app.quotely.ui.editor.OcrVerificationSheet(
+            ocrResult = ocrResult,
+            availableTags = uiState.tags,
+            onDismiss = { pendingOcrResult = null },
+            onSaveQuote = { newQuote ->
+                onSaveQuote(newQuote)
+                pendingOcrResult = null
+            }
+        )
+    }
+
     QuotelyTheme(preset = ThemePreset.CreatorsChoice) {
         Scaffold(
             snackbarHost = {
@@ -97,18 +115,56 @@ fun GalleryScreen(
                 }
             },
             floatingActionButton = {
-                if (uiState.quotes.isNotEmpty()) {
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     FloatingActionButton(
-                        onClick = onCreateQuoteClick,
-                        containerColor = WarmGold,
-                        contentColor = Color(0xFF3C2F00),
+                        onClick = {
+                            isOcrScanning = true
+                            // Trigger platform OCR scan with sample image bytes
+                            val scanner = com.app.quotely.ocr.getPlatformOcrScanner()
+                            kotlinx.coroutines.MainScope().launch {
+                                val result = scanner.scanTextFromImage("We suffer more in imagination than in reality. — Seneca, Letters from a Stoic".encodeToByteArray())
+                                isOcrScanning = false
+                                result.onSuccess { ocrRes ->
+                                    pendingOcrResult = ocrRes
+                                }
+                            }
+                        },
+                        containerColor = Color(0xFF222222),
+                        contentColor = WarmGold,
                         shape = RoundedCornerShape(0.dp)
                     ) {
-                        Text(
-                            text = "+",
-                            style = typography.quoteDisplayMobile.copy(fontSize = 28.sp),
-                            textAlign = TextAlign.Center
-                        )
+                        if (isOcrScanning) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.padding(8.dp),
+                                color = WarmGold,
+                                strokeWidth = 2.dp
+                            )
+                        } else {
+                            Text(
+                                text = "📷 OCR",
+                                style = typography.uiButton.copy(fontSize = 11.sp, fontWeight = FontWeight.Bold),
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(horizontal = 8.dp)
+                            )
+                        }
+                    }
+
+                    if (uiState.quotes.isNotEmpty()) {
+                        FloatingActionButton(
+                            onClick = onCreateQuoteClick,
+                            containerColor = WarmGold,
+                            contentColor = Color(0xFF3C2F00),
+                            shape = RoundedCornerShape(0.dp)
+                        ) {
+                            Text(
+                                text = "+",
+                                style = typography.quoteDisplayMobile.copy(fontSize = 28.sp),
+                                textAlign = TextAlign.Center
+                            )
+                        }
                     }
                 }
             },
