@@ -1,23 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="108dp"
-    android:height="108dp"
-    android:viewportWidth="108"
-    android:viewportHeight="108">
-    <group
-        android:scaleX="0.65"
-        android:scaleY="0.65"
-        android:translateX="18.9"
-        android:translateY="18.9">
-        <!-- Outer Gold Monolith Circle Border -->
-        <path
-            android:fillColor="#00000000"
-            android:strokeColor="#D4AF37"
-            android:strokeWidth="3"
-            android:pathData="M54,10 C29.7,10 10,29.7 10,54 C10,78.3 29.7,98 54,98 C78.3,98 98,78.3 98,54 C98,29.7 78.3,10 54,10 Z" />
-        <!-- Radiant Warm Gold Quotation Emblem -->
-        <path
-            android:fillColor="#D4AF37"
-            android:pathData="M38,40 C33,40 29,44 29,49 C29,58 36,66 43,68 L45,64 C40,62 36,56 36,52 C37,52 38,52 39,51 C42,50 44,47 44,44 C44,41 41,40 38,40 Z M67,40 C62,40 58,44 58,49 C58,58 65,66 72,68 L74,64 C69,62 65,56 65,52 C66,52 67,52 68,51 C71,50 73,47 73,44 C73,41 70,40 67,40 Z" />
-    </group>
-</vector>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:width="72dp"
+        android:height="72dp"
+        android:gravity="center"
+        android:drawable="@drawable/ic_launcher_foreground_img" />
+</layer-list>
