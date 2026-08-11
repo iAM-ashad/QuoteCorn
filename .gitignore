@@ -2,9 +2,14 @@
 .kotlin
 .gradle
 **/build/
-xcuserdata
+flashdata
+userdata
 !src/**/build/
 local.properties
+keystore.properties
+*.jks
+*.keystore
+*.p12
 .idea
 .DS_Store
 captures
