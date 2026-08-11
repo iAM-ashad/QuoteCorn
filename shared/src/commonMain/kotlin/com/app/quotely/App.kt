@@ -32,6 +32,14 @@ sealed interface Screen {
 class InMemoryQuoteRepository : QuoteRepository {
     private val quotesFlow = MutableStateFlow<List<Quote>>(emptyList())
     private val tagsFlow = MutableStateFlow<List<Tag>>(emptyList())
+    private val albumsFlow = MutableStateFlow<List<com.app.quotely.domain.model.Album>>(
+        listOf(
+            com.app.quotely.domain.model.Album("album_ideas_changed_me", "Ideas That Changed Me", "Key insights and life-altering perspectives", "creators_choice"),
+            com.app.quotely.domain.model.Album("album_stoic_models", "Stoic Mental Models", "Ancient wisdom for modern resilience", "aurelian_monolith"),
+            com.app.quotely.domain.model.Album("album_cinematic_dialogue", "Cinematic Dialogue", "Unforgettable quotes from film & stage", "midnight_obsidian"),
+            com.app.quotely.domain.model.Album("album_ambition_leadership", "Ambition & Leadership", "Principles for building and leading", "royal_emerald")
+        )
+    )
 
     override fun getQuotes(): Flow<List<Quote>> = quotesFlow.asStateFlow()
 
@@ -69,6 +77,22 @@ class InMemoryQuoteRepository : QuoteRepository {
 
     override suspend fun deleteTag(tag: Tag): Result<Unit> {
         tagsFlow.update { current -> current.filterNot { it.id == tag.id } }
+        return Result.success(Unit)
+    }
+
+    override fun getAlbums(): Flow<List<com.app.quotely.domain.model.Album>> = albumsFlow.asStateFlow()
+
+    override fun getQuotesForAlbum(albumId: String): Flow<List<Quote>> = quotesFlow.asStateFlow()
+
+    override suspend fun saveAlbum(album: com.app.quotely.domain.model.Album): Result<Unit> {
+        albumsFlow.update { current ->
+            val index = current.indexOfFirst { it.id == album.id }
+            if (index >= 0) {
+                current.toMutableList().also { it[index] = album }
+            } else {
+                listOf(album) + current
+            }
+        }
         return Result.success(Unit)
     }
 }
