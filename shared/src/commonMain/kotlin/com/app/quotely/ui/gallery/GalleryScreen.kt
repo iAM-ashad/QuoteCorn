@@ -136,36 +136,18 @@ fun GalleryScreen(
                 ) {
                     FloatingActionButton(
                         onClick = {
-                            isOcrScanning = true
-                            coroutineScope.launch {
-                                val scanner = com.app.quotely.ocr.getPlatformOcrScanner()
-                                val result = scanner.scanTextFromImage("We suffer more in imagination than in reality. — Seneca, Letters from a Stoic".encodeToByteArray())
-                                isOcrScanning = false
-                                result.onSuccess { ocrRes ->
-                                    pendingOcrResult = ocrRes
-                                }.onFailure {
-                                    pendingOcrResult = com.app.quotely.domain.util.OcrTextParser.parse("We suffer more in imagination than in reality. — Seneca, Letters from a Stoic")
-                                }
-                            }
+                            pendingOcrResult = com.app.quotely.domain.util.OcrTextParser.parse("We suffer more in imagination than in reality. — Seneca, Letters from a Stoic")
                         },
                         containerColor = Color(0xFF222222),
                         contentColor = WarmGold,
                         shape = RoundedCornerShape(0.dp)
                     ) {
-                        if (isOcrScanning) {
-                            CircularProgressIndicator(
-                                modifier = Modifier.padding(8.dp),
-                                color = WarmGold,
-                                strokeWidth = 2.dp
-                            )
-                        } else {
-                            Text(
-                                text = "📷 OCR",
-                                style = typography.uiButton.copy(fontSize = 11.sp, fontWeight = FontWeight.Bold),
-                                textAlign = TextAlign.Center,
-                                modifier = Modifier.padding(horizontal = 8.dp)
-                            )
-                        }
+                        Text(
+                            text = "📷 OCR",
+                            style = typography.uiButton.copy(fontSize = 11.sp, fontWeight = FontWeight.Bold),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
                     }
 
                     if (uiState.quotes.isNotEmpty()) {

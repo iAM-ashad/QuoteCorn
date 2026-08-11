@@ -33,6 +33,7 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.app.quotely.domain.model.Quote
 import com.app.quotely.domain.model.Tag
 import com.app.quotely.ocr.OcrResult
@@ -52,155 +53,146 @@ fun OcrVerificationSheet(
     var selectedTagIds by remember { mutableStateOf(setOf(availableTags.firstOrNull()?.id ?: "philosophy")) }
     var selectedThemeId by remember { mutableStateOf("creators_choice") }
 
-    Surface(
-        modifier = modifier
-            .fillMaxWidth()
-            .border(1.dp, WarmGold, RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)),
-        color = Color(0xFF131313),
-        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
-    ) {
-        Column(
-            modifier = Modifier
+    Dialog(onDismissRequest = onDismiss) {
+        Surface(
+            modifier = modifier
                 .fillMaxWidth()
-                .padding(24.dp)
-                .verticalScroll(rememberScrollState()),
-            horizontalAlignment = Alignment.CenterHorizontally
+                .border(1.dp, WarmGold, RoundedCornerShape(12.dp)),
+            color = Color(0xFF131313),
+            shape = RoundedCornerShape(12.dp)
         ) {
-            // Drag Handle Pill
-            Box(
-                modifier = Modifier
-                    .width(36.dp)
-                    .height(4.dp)
-                    .background(Color(0xFF333333), RoundedCornerShape(2.dp))
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Quotation Monogram Header
-            Text(
-                text = "“ ”",
-                color = WarmGold,
-                fontSize = 28.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                text = "VERIFY CAPTURED QUOTE",
-                color = Color.White,
-                fontSize = 18.sp,
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 1.sp
-            )
-
-            Text(
-                text = "Review & refine extracted text from camera or screenshot OCR",
-                color = Color(0xFFA0A0A0),
-                fontSize = 12.sp,
-                modifier = Modifier.padding(top = 4.dp, bottom = 20.dp)
-            )
-
-            // Quote Text Input
-            OutlinedTextField(
-                value = text,
-                onValueChange = { text = it },
-                label = { Text("Quote Body", color = WarmGold) },
+            Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = WarmGold,
-                    unfocusedBorderColor = Color(0xFF333333),
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                )
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Author Input
-            OutlinedTextField(
-                value = author,
-                onValueChange = { author = it },
-                label = { Text("Author", color = WarmGold) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = WarmGold,
-                    unfocusedBorderColor = Color(0xFF333333),
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                )
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Source Input
-            OutlinedTextField(
-                value = source,
-                onValueChange = { source = it },
-                label = { Text("Source (Book / Podcast / Article)", color = WarmGold) },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = WarmGold,
-                    unfocusedBorderColor = Color(0xFF333333),
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.White
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Tag Selector Row
-            TagSelectorRow(
-                tags = availableTags,
-                selectedTagIds = selectedTagIds,
-                onTagToggle = { tagId ->
-                    selectedTagIds = if (selectedTagIds.contains(tagId)) setOf(tagId) else setOf(tagId)
-                }
-            )
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Action Buttons
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    .padding(24.dp)
+                    .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                OutlinedButton(
-                    onClick = onDismiss,
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(4.dp),
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
-                    border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF444444))
-                ) {
-                    Text("CANCEL", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                }
+                // Drag Handle Pill
+                Box(
+                    modifier = Modifier
+                        .width(36.dp)
+                        .height(4.dp)
+                        .background(Color(0xFF333333), RoundedCornerShape(2.dp))
+                )
 
-                Button(
-                    onClick = {
-                        com.app.quotely.data.telemetry.WacTelemetryTracker.logAction(com.app.quotely.data.telemetry.WacTelemetryTracker.ACTION_CAPTURE_OCR)
-                        val newQuote = Quote(
-                            id = "quote_" + kotlin.random.Random.nextLong(100000, 999999),
-                            text = text.trim(),
-                            author = author.trim().ifBlank { "Anonymous" },
-                            source = source.trim().ifBlank { null },
-                            tagIds = selectedTagIds.toList(),
-                            themePresetId = selectedThemeId,
-                            createdAt = 1700000000000L
-                        )
-                        onSaveQuote(newQuote)
-                    },
-                    enabled = text.isNotBlank(),
-                    modifier = Modifier.weight(1f),
-                    shape = RoundedCornerShape(4.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = WarmGold,
-                        contentColor = Color.Black
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Quotation Monogram Header
+                Text(
+                    text = "“ ”",
+                    color = WarmGold,
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Text(
+                    text = "VERIFY CAPTURED QUOTE",
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontFamily = FontFamily.Serif,
+                    fontWeight = FontWeight.SemiBold,
+                    letterSpacing = 1.sp
+                )
+
+                Text(
+                    text = "Review & refine extracted text from camera or screenshot OCR",
+                    color = Color(0xFFA0A0A0),
+                    fontSize = 12.sp,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 20.dp)
+                )
+
+                // Quote Text Input
+                OutlinedTextField(
+                    value = text,
+                    onValueChange = { text = it },
+                    label = { Text("Quote Body", color = WarmGold) },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(120.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = WarmGold,
+                        unfocusedBorderColor = Color(0xFF333333),
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White
                     )
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Author Input
+                OutlinedTextField(
+                    value = author,
+                    onValueChange = { author = it },
+                    label = { Text("Author", color = WarmGold) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = WarmGold,
+                        unfocusedBorderColor = Color(0xFF333333),
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Source Input
+                OutlinedTextField(
+                    value = source,
+                    onValueChange = { source = it },
+                    label = { Text("Source (Book / Film)", color = WarmGold) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = WarmGold,
+                        unfocusedBorderColor = Color(0xFF333333),
+                        focusedTextColor = Color.White,
+                        unfocusedTextColor = Color.White
+                    )
+                )
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Action Buttons
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    Text("SAVE TO SANCTUARY", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    OutlinedButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(4.dp),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF444444))
+                    ) {
+                        Text("DISCARD", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                    }
+
+                    Button(
+                        onClick = {
+                            com.app.quotely.data.telemetry.WacTelemetryTracker.logAction(com.app.quotely.data.telemetry.WacTelemetryTracker.ACTION_CAPTURE_OCR)
+                            val newQuote = Quote(
+                                id = "quote_" + kotlin.random.Random.nextLong(100000, 999999),
+                                text = text.trim(),
+                                author = author.trim().ifBlank { "Anonymous" },
+                                source = source.trim().ifBlank { null },
+                                tagIds = selectedTagIds.toList(),
+                                themePresetId = selectedThemeId,
+                                createdAt = 1700000000000L
+                            )
+                            onSaveQuote(newQuote)
+                        },
+                        enabled = text.isNotBlank(),
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(4.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = WarmGold,
+                            contentColor = Color.Black
+                        )
+                    ) {
+                        Text("SAVE TO SANCTUARY", fontSize = 12.sp, fontWeight = FontWeight.Bold)
+                    }
                 }
             }
         }
