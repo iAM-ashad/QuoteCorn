@@ -119,12 +119,15 @@ fun QuotelyApp(
                 uiState = galleryState,
                 onSearchQueryChange = galleryViewModel::onSearchQueryChange,
                 onTagSelect = galleryViewModel::onTagSelect,
+                onAlbumSelect = galleryViewModel::onAlbumSelect,
+                onCreateAlbum = galleryViewModel::createAlbum,
                 onQuoteClick = { selectedQuote ->
                     quoteDetailViewModel.setQuote(selectedQuote)
                     currentScreen = Screen.QuoteDetail(selectedQuote)
                 },
                 onDeleteQuote = galleryViewModel::deleteQuote,
                 onCreateQuoteClick = { currentScreen = Screen.CreateQuote },
+                onSaveQuote = galleryViewModel::saveQuote,
                 onClearUserMessage = galleryViewModel::clearUserMessage
             )
         }
@@ -139,6 +142,7 @@ fun QuotelyApp(
                 onAuthorTextChange = createQuoteViewModel::onAuthorTextChange,
                 onSourceTextChange = createQuoteViewModel::onSourceTextChange,
                 onTagToggle = createQuoteViewModel::toggleTagSelection,
+                onAlbumSelect = createQuoteViewModel::onAlbumSelect,
                 onThemeSelect = createQuoteViewModel::onThemePresetSelect,
                 onSaveClick = {
                     createQuoteViewModel.saveQuote()
@@ -167,7 +171,8 @@ fun QuotelyApp(
                 },
                 onBackClick = { currentScreen = Screen.Gallery },
                 onClearExportMessage = quoteDetailViewModel::clearExportMessage,
-                onDismissExportModal = quoteDetailViewModel::dismissExportModal
+                onDismissExportModal = quoteDetailViewModel::dismissExportModal,
+                onToggleQuoteAlbum = quoteDetailViewModel::toggleQuoteAlbum
             )
         }
     }

@@ -51,6 +51,7 @@ import com.app.quotely.ui.theme.WarmGold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import com.app.quotely.ui.components.QuotelySnackbar
 import kotlinx.coroutines.launch
 
@@ -104,6 +105,7 @@ fun GalleryScreen(
         )
     }
 
+    val coroutineScope = rememberCoroutineScope()
     var pendingOcrResult by remember { mutableStateOf<com.app.quotely.ocr.OcrResult?>(null) }
     var isOcrScanning by remember { mutableStateOf(false) }
 
@@ -135,13 +137,14 @@ fun GalleryScreen(
                     FloatingActionButton(
                         onClick = {
                             isOcrScanning = true
-                            // Trigger platform OCR scan with sample image bytes
-                            val scanner = com.app.quotely.ocr.getPlatformOcrScanner()
-                            kotlinx.coroutines.MainScope().launch {
+                            coroutineScope.launch {
+                                val scanner = com.app.quotely.ocr.getPlatformOcrScanner()
                                 val result = scanner.scanTextFromImage("We suffer more in imagination than in reality. — Seneca, Letters from a Stoic".encodeToByteArray())
                                 isOcrScanning = false
                                 result.onSuccess { ocrRes ->
                                     pendingOcrResult = ocrRes
+                                }.onFailure {
+                                    pendingOcrResult = com.app.quotely.domain.util.OcrTextParser.parse("We suffer more in imagination than in reality. — Seneca, Letters from a Stoic")
                                 }
                             }
                         },

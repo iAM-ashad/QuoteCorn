@@ -44,6 +44,7 @@ fun CreateQuoteScreen(
     onAuthorTextChange: (String) -> Unit,
     onSourceTextChange: (String) -> Unit,
     onTagToggle: (String) -> Unit,
+    onAlbumSelect: (String?) -> Unit = {},
     onThemeSelect: (String) -> Unit,
     onSaveClick: () -> Unit,
     onBackClick: () -> Unit,
@@ -192,6 +193,17 @@ fun CreateQuoteScreen(
                         onTagToggle = onTagToggle,
                         modifier = Modifier.padding(top = 6.dp)
                     )
+
+                    // Album Selector Row
+                    if (uiState.availableAlbums.isNotEmpty()) {
+                        com.app.quotely.ui.gallery.AlbumCarouselRow(
+                            albums = uiState.availableAlbums,
+                            selectedAlbumId = uiState.selectedAlbumId,
+                            onAlbumSelect = onAlbumSelect,
+                            onCreateAlbumClick = {},
+                            modifier = Modifier.padding(top = 6.dp)
+                        )
+                    }
 
                     // Theme Selector Row
                     ThemeSelectorRow(

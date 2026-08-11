@@ -68,6 +68,7 @@ fun QuoteDetailScreen(
     onBackClick: () -> Unit,
     onClearExportMessage: () -> Unit,
     onDismissExportModal: () -> Unit,
+    onToggleQuoteAlbum: (String, Boolean) -> Unit = { _, _ -> },
     modifier: Modifier = Modifier
 ) {
     val quote = uiState.quote ?: return
@@ -76,12 +77,23 @@ fun QuoteDetailScreen(
     val imageSaver = rememberImageSaver()
     val snackbarHostState = remember { SnackbarHostState() }
     var showDeleteDialog by remember { mutableStateOf(false) }
+    var showAddToAlbumSheet by remember { mutableStateOf(false) }
 
     uiState.exportSuccessMessage?.let { msg ->
         LaunchedEffect(msg) {
             snackbarHostState.showSnackbar(msg)
             onClearExportMessage()
         }
+    }
+
+    // Add To Album Sheet Modal
+    if (showAddToAlbumSheet) {
+        AddToAlbumSheet(
+            albums = uiState.availableAlbums,
+            assignedAlbumIds = uiState.assignedAlbumIds,
+            onToggleAlbum = onToggleQuoteAlbum,
+            onDismiss = { showAddToAlbumSheet = false }
+        )
     }
 
     // 1. Delete Confirmation Dialog
@@ -231,6 +243,7 @@ fun QuoteDetailScreen(
                         onThemeSelect = onThemeSelect,
                         onExportClick = { onExportClick(textMeasurer) },
                         onDeleteClick = { showDeleteDialog = true },
+                        onAddToAlbumClick = { showAddToAlbumSheet = true },
                         onDismissPanel = onToggleControls
                     )
                 }

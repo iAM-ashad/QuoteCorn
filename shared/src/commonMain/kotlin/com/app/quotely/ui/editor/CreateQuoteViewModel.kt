@@ -22,6 +22,7 @@ class CreateQuoteViewModel(
 
     init {
         loadTags()
+        loadAlbums()
     }
 
     private fun loadTags() {
@@ -34,6 +35,14 @@ class CreateQuoteViewModel(
                 } else {
                     _uiState.update { it.copy(availableTags = tags) }
                 }
+            }
+        }
+    }
+
+    private fun loadAlbums() {
+        viewModelScope.launch {
+            repository.getAlbums().collect { albums ->
+                _uiState.update { it.copy(availableAlbums = albums) }
             }
         }
     }
@@ -61,6 +70,13 @@ class CreateQuoteViewModel(
         }
     }
 
+    fun onAlbumSelect(albumId: String?) {
+        _uiState.update { state ->
+            val newSelected = if (state.selectedAlbumId == albumId) null else albumId
+            state.copy(selectedAlbumId = newSelected)
+        }
+    }
+
     fun onThemePresetSelect(presetId: String) {
         _uiState.update {
             it.copy(selectedThemePresetId = presetId)
@@ -84,6 +100,9 @@ class CreateQuoteViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
             repository.saveQuote(newQuote)
+            current.selectedAlbumId?.let { albumId ->
+                repository.addQuoteToAlbum(newQuote.id, albumId)
+            }
             _uiState.update {
                 it.copy(
                     isSaving = false,
@@ -91,7 +110,8 @@ class CreateQuoteViewModel(
                     quoteText = "",
                     authorText = "",
                     sourceText = "",
-                    selectedTagIds = emptySet()
+                    selectedTagIds = emptySet(),
+                    selectedAlbumId = null
                 )
             }
         }

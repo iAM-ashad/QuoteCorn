@@ -1,6 +1,7 @@
 package com.app.quotely.ui.detail
 
 import androidx.compose.ui.graphics.ImageBitmap
+import com.app.quotely.domain.model.Album
 import com.app.quotely.domain.model.Quote
 import com.app.quotely.ui.components.ExportAspectRatio
 import com.app.quotely.ui.theme.ThemePreset
@@ -17,5 +18,7 @@ data class QuoteDetailUiState(
     val showExportModal: Boolean = false,
     val selectedAspectRatio: ExportAspectRatio = ExportAspectRatio.SQUARE_1_1,
     val exportedBitmap: ImageBitmap? = null,
-    val exportSuccessMessage: String? = null
+    val exportSuccessMessage: String? = null,
+    val availableAlbums: List<Album> = emptyList(),
+    val assignedAlbumIds: Set<String> = emptySet()
 )

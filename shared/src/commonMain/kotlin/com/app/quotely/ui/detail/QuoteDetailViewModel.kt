@@ -23,6 +23,18 @@ class QuoteDetailViewModel(
     private val _uiState = MutableStateFlow(QuoteDetailUiState())
     val uiState: StateFlow<QuoteDetailUiState> = _uiState.asStateFlow()
 
+    init {
+        loadAlbums()
+    }
+
+    private fun loadAlbums() {
+        viewModelScope.launch {
+            repository.getAlbums().collect { albums ->
+                _uiState.update { it.copy(availableAlbums = albums) }
+            }
+        }
+    }
+
     fun setQuote(quote: Quote) {
         val preset = ThemePreset.availablePresets.find { it.id == quote.themePresetId }
             ?: ThemePreset.Default
@@ -45,6 +57,19 @@ class QuoteDetailViewModel(
         val preset = ThemePreset.availablePresets.find { it.id == presetId }
             ?: ThemePreset.Default
         _uiState.update { it.copy(activeThemePreset = preset) }
+    }
+
+    fun toggleQuoteAlbum(albumId: String, isAssigned: Boolean) {
+        val quoteId = _uiState.value.quote?.id ?: return
+        viewModelScope.launch {
+            if (isAssigned) {
+                repository.addQuoteToAlbum(quoteId, albumId)
+                _uiState.update { it.copy(assignedAlbumIds = it.assignedAlbumIds + albumId) }
+            } else {
+                repository.removeQuoteFromAlbum(quoteId, albumId)
+                _uiState.update { it.copy(assignedAlbumIds = it.assignedAlbumIds - albumId) }
+            }
+        }
     }
 
     fun deleteQuote(onDeleted: () -> Unit) {

@@ -1,5 +1,6 @@
 package com.app.quotely.ui.editor
 
+import com.app.quotely.domain.model.Album
 import com.app.quotely.domain.model.Tag
 import com.app.quotely.ui.theme.ThemePreset
 
@@ -13,6 +14,8 @@ data class CreateQuoteUiState(
     val selectedTagIds: Set<String> = emptySet(),
     val selectedThemePresetId: String = ThemePreset.AurelianMonolith.id,
     val availableTags: List<Tag> = emptyList(),
+    val availableAlbums: List<Album> = emptyList(),
+    val selectedAlbumId: String? = null,
     val isSaving: Boolean = false,
     val isSaveSuccess: Boolean = false,
     val errorMessage: String? = null

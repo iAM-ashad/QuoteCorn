@@ -101,6 +101,13 @@ class GalleryViewModel(
         }
     }
 
+    fun saveQuote(quote: Quote) {
+        viewModelScope.launch {
+            repository.saveQuote(quote)
+            showUserMessage("Quote captured successfully to your sanctuary.")
+        }
+    }
+
     fun deleteQuote(quoteId: String) {
         viewModelScope.launch {
             repository.deleteQuote(quoteId)
