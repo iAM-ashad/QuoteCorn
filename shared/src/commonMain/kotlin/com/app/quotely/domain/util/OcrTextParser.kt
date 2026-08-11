@@ -4,6 +4,14 @@ import com.app.quotely.ocr.OcrResult
 
 object OcrTextParser {
 
+    fun isValidQuoteText(rawText: String): Boolean {
+        val trimmed = rawText.trim()
+        if (trimmed.length < 10) return false
+        val letterCount = trimmed.count { it.isLetter() }
+        val letterRatio = letterCount.toDouble() / trimmed.length.toDouble()
+        return letterCount >= 8 && letterRatio >= 0.35
+    }
+
     fun parse(rawText: String): OcrResult {
         if (rawText.isBlank()) {
             return OcrResult(

@@ -6,23 +6,26 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +37,7 @@ import androidx.compose.ui.window.Dialog
 import com.app.quotely.domain.model.Album
 import com.app.quotely.ui.theme.WarmGold
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun AddToAlbumSheet(
     albums: List<Album>,
@@ -42,6 +46,10 @@ fun AddToAlbumSheet(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    var isDropdownExpanded by remember { mutableStateOf(false) }
+    val assignedAlbums = albums.filter { assignedAlbumIds.contains(it.id) }
+    val unassignedAlbums = albums.filter { !assignedAlbumIds.contains(it.id) }
+
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             modifier = modifier
@@ -53,20 +61,10 @@ fun AddToAlbumSheet(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(20.dp)
-                    .verticalScroll(rememberScrollState()),
+                    .padding(20.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Drag Handle
-                Box(
-                    modifier = Modifier
-                        .width(36.dp)
-                        .height(4.dp)
-                        .background(Color(0xFF333333), RoundedCornerShape(2.dp))
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
+                // Header
                 Text(
                     text = "“ ”",
                     color = WarmGold,
@@ -77,73 +75,161 @@ fun AddToAlbumSheet(
                 Text(
                     text = "ADD TO THOUGHT ALBUM",
                     color = Color.White,
-                    fontSize = 16.sp,
+                    fontSize = 15.sp,
                     fontFamily = FontFamily.Serif,
                     fontWeight = FontWeight.SemiBold,
                     letterSpacing = 1.sp
                 )
 
-                Text(
-                    text = "Select albums to organize and curate this thought",
-                    color = Color(0xFFA0A0A0),
-                    fontSize = 11.sp,
-                    modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
-                )
-
+                Spacer(modifier = Modifier.height(14.dp))
                 HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
+                Spacer(modifier = Modifier.height(14.dp))
 
-                Spacer(modifier = Modifier.height(12.dp))
-
-                if (albums.isEmpty()) {
+                // Section 1: Currently Assigned Status Badge
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start
+                ) {
                     Text(
-                        text = "No albums created yet.",
-                        color = Color.White.copy(alpha = 0.6f),
-                        fontSize = 12.sp,
-                        modifier = Modifier.padding(vertical = 16.dp)
+                        text = "CURRENTLY BELONGS TO:",
+                        color = Color.White.copy(alpha = 0.5f),
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.5.sp
                     )
-                } else {
-                    albums.forEach { album ->
-                        val isAssigned = assignedAlbumIds.contains(album.id)
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable { onToggleAlbum(album.id, !isAssigned) }
-                                .padding(vertical = 10.dp, horizontal = 4.dp),
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    if (assignedAlbums.isEmpty()) {
+                        Text(
+                            text = "Not in any album yet",
+                            color = Color.White.copy(alpha = 0.4f),
+                            fontSize = 12.sp
+                        )
+                    } else {
+                        FlowRow(
+                            horizontalArrangement = Arrangement.spacedBy(6.dp),
+                            verticalArrangement = Arrangement.spacedBy(6.dp)
                         ) {
-                            Column(modifier = Modifier.weight(1f)) {
-                                Text(
-                                    text = album.name.uppercase(),
-                                    color = Color.White,
-                                    fontSize = 13.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                                album.description?.let { desc ->
+                            assignedAlbums.forEach { album ->
+                                Row(
+                                    modifier = Modifier
+                                        .background(Color(0xFF222222), RoundedCornerShape(4.dp))
+                                        .border(1.dp, WarmGold, RoundedCornerShape(4.dp))
+                                        .padding(horizontal = 10.dp, vertical = 6.dp),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                                ) {
                                     Text(
-                                        text = desc,
-                                        color = Color.White.copy(alpha = 0.5f),
-                                        fontSize = 10.sp
+                                        text = album.name.uppercase(),
+                                        color = WarmGold,
+                                        fontSize = 10.sp,
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                    Text(
+                                        text = "✕",
+                                        color = Color.White.copy(alpha = 0.6f),
+                                        fontSize = 10.sp,
+                                        modifier = Modifier.clickable {
+                                            onToggleAlbum(album.id, false)
+                                        }
                                     )
                                 }
                             }
-
-                            Checkbox(
-                                checked = isAssigned,
-                                onCheckedChange = { checked -> onToggleAlbum(album.id, checked) },
-                                colors = CheckboxDefaults.colors(
-                                    checkedColor = WarmGold,
-                                    uncheckedColor = Color.White.copy(alpha = 0.4f),
-                                    checkmarkColor = Color.Black
-                                )
-                            )
                         }
-                        HorizontalDivider(color = Color.White.copy(alpha = 0.05f))
                     }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
+                // Section 2: Dropdown Selector for Unassigned Albums
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    Text(
+                        text = "ADD TO ANOTHER ALBUM:",
+                        color = Color.White.copy(alpha = 0.5f),
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold,
+                        letterSpacing = 0.5.sp
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Box(modifier = Modifier.fillMaxWidth()) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .background(Color(0xFF1E1E1E), RoundedCornerShape(4.dp))
+                                .border(1.dp, Color.White.copy(alpha = 0.2f), RoundedCornerShape(4.dp))
+                                .clickable(enabled = unassignedAlbums.isNotEmpty()) {
+                                    isDropdownExpanded = true
+                                }
+                                .padding(horizontal = 14.dp, vertical = 12.dp)
+                        ) {
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Text(
+                                    text = if (unassignedAlbums.isEmpty()) {
+                                        "All albums assigned"
+                                    } else {
+                                        "Select album from list..."
+                                    },
+                                    color = if (unassignedAlbums.isEmpty()) Color.White.copy(alpha = 0.4f) else Color.White,
+                                    fontSize = 12.sp
+                                )
+                                Text(
+                                    text = "▼",
+                                    color = WarmGold,
+                                    fontSize = 10.sp
+                                )
+                            }
+                        }
+
+                        DropdownMenu(
+                            expanded = isDropdownExpanded,
+                            onDismissRequest = { isDropdownExpanded = false },
+                            modifier = Modifier
+                                .fillMaxWidth(0.85f)
+                                .background(Color(0xFF1E1E1E))
+                                .border(1.dp, WarmGold, RoundedCornerShape(4.dp))
+                        ) {
+                            unassignedAlbums.forEach { album ->
+                                DropdownMenuItem(
+                                    text = {
+                                        Column {
+                                            Text(
+                                                text = album.name.uppercase(),
+                                                color = Color.White,
+                                                fontSize = 12.sp,
+                                                fontWeight = FontWeight.Bold
+                                            )
+                                            album.description?.let { desc ->
+                                                Text(
+                                                    text = desc,
+                                                    color = Color.White.copy(alpha = 0.5f),
+                                                    fontSize = 10.sp
+                                                )
+                                            }
+                                        }
+                                    },
+                                    onClick = {
+                                        isDropdownExpanded = false
+                                        onToggleAlbum(album.id, true)
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Done Close Button
                 Button(
                     onClick = onDismiss,
                     modifier = Modifier.fillMaxWidth(),

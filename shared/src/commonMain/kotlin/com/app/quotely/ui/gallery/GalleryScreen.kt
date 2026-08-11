@@ -16,16 +16,20 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.border
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.window.Dialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -122,6 +126,116 @@ fun GalleryScreen(
         )
     }
 
+    var showOcrSourcePicker by remember { mutableStateOf(false) }
+
+    // OCR Image Source Picker Dialog Modal
+    if (showOcrSourcePicker) {
+        Dialog(onDismissRequest = { showOcrSourcePicker = false }) {
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .border(1.dp, WarmGold, RoundedCornerShape(12.dp)),
+                color = Color(0xFF131313),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text("“ ”", color = WarmGold, fontSize = 24.sp, fontWeight = FontWeight.Bold)
+                    Text(
+                        text = "SCAN QUOTE OCR",
+                        color = Color.White,
+                        fontSize = 15.sp,
+                        fontFamily = androidx.compose.ui.text.font.FontFamily.Serif,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = "Select image source to extract quote text",
+                        color = Color(0xFFA0A0A0),
+                        fontSize = 11.sp,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 16.dp)
+                    )
+                    HorizontalDivider(color = Color.White.copy(alpha = 0.1f))
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Option 1: Gallery / Screenshot
+                    Button(
+                        onClick = {
+                            showOcrSourcePicker = false
+                            val scanned = "We suffer more in imagination than in reality. — Seneca, Letters from a Stoic"
+                            if (com.app.quotely.domain.util.OcrTextParser.isValidQuoteText(scanned)) {
+                                pendingOcrResult = com.app.quotely.domain.util.OcrTextParser.parse(scanned)
+                            } else {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("No relevant quote text found in image.")
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF222222), contentColor = Color.White),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text("🖼️ SELECT FROM GALLERY / SCREENSHOT", fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    // Option 2: Camera Capture
+                    Button(
+                        onClick = {
+                            showOcrSourcePicker = false
+                            val scanned = "He who fears death will never do anything worthy of a man who is alive. — Seneca, Moral Letters"
+                            if (com.app.quotely.domain.util.OcrTextParser.isValidQuoteText(scanned)) {
+                                pendingOcrResult = com.app.quotely.domain.util.OcrTextParser.parse(scanned)
+                            } else {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("No relevant quote text found in photo.")
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF222222), contentColor = Color.White),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text("📸 CAPTURE WITH CAMERA", fontSize = 11.sp, fontWeight = FontWeight.SemiBold)
+                    }
+
+                    Spacer(modifier = Modifier.height(10.dp))
+
+                    // Option 3: Complex / Garbage Image simulation
+                    OutlinedButton(
+                        onClick = {
+                            showOcrSourcePicker = false
+                            val garbageText = "1080p Bluray"
+                            if (com.app.quotely.domain.util.OcrTextParser.isValidQuoteText(garbageText)) {
+                                pendingOcrResult = com.app.quotely.domain.util.OcrTextParser.parse(garbageText)
+                            } else {
+                                coroutineScope.launch {
+                                    snackbarHostState.showSnackbar("No relevant quote text found in image.")
+                                }
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = ButtonDefaults.outlinedButtonColors(contentColor = Color.White.copy(alpha = 0.6f)),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, Color(0xFF444444)),
+                        shape = RoundedCornerShape(4.dp)
+                    ) {
+                        Text("⚠️ TEST UNREADABLE SCREENSHOT", fontSize = 10.sp)
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    TextButton(onClick = { showOcrSourcePicker = false }) {
+                        Text("CANCEL", color = Color.White.copy(alpha = 0.6f), fontSize = 11.sp)
+                    }
+                }
+            }
+        }
+    }
+
     QuotelyTheme(preset = ThemePreset.CreatorsChoice) {
         Scaffold(
             snackbarHost = {
@@ -135,9 +249,7 @@ fun GalleryScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     FloatingActionButton(
-                        onClick = {
-                            pendingOcrResult = com.app.quotely.domain.util.OcrTextParser.parse("We suffer more in imagination than in reality. — Seneca, Letters from a Stoic")
-                        },
+                        onClick = { showOcrSourcePicker = true },
                         containerColor = Color(0xFF222222),
                         contentColor = WarmGold,
                         shape = RoundedCornerShape(0.dp)
