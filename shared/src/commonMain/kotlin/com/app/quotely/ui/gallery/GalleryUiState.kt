@@ -1,5 +1,6 @@
 package com.app.quotely.ui.gallery
 
+import com.app.quotely.domain.model.Album
 import com.app.quotely.domain.model.Quote
 import com.app.quotely.domain.model.Tag
 
@@ -9,7 +10,9 @@ import com.app.quotely.domain.model.Tag
 data class GalleryUiState(
     val quotes: List<Quote> = emptyList(),
     val tags: List<Tag> = emptyList(),
+    val albums: List<Album> = emptyList(),
     val selectedTagId: String? = null,
+    val selectedAlbumId: String? = null,
     val searchQuery: String = "",
     val isLoading: Boolean = false,
     val selectedQuoteForFocus: Quote? = null,

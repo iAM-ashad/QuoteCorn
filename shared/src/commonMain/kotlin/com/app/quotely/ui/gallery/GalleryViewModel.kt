@@ -2,6 +2,7 @@ package com.app.quotely.ui.gallery
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.quotely.domain.model.Album
 import com.app.quotely.domain.model.DefaultTags
 import com.app.quotely.domain.model.Quote
 import com.app.quotely.domain.repository.QuoteRepository
@@ -28,11 +29,13 @@ class GalleryViewModel(
 
     private fun observeData() {
         viewModelScope.launch {
+            repository.seedStarterAlbumsIfEmpty()
             _uiState.update { it.copy(isLoading = true) }
             combine(
                 repository.getQuotes(),
-                repository.getTags()
-            ) { quotes, tags ->
+                repository.getTags(),
+                repository.getAlbums()
+            ) { quotes, tags, albums ->
                 if (!hasCheckedInitialSeed && quotes.isEmpty() && tags.isEmpty()) {
                     hasCheckedInitialSeed = true
                     seedSampleQuotes()
@@ -43,6 +46,7 @@ class GalleryViewModel(
                         state.copy(
                             quotes = filterQuotes(quotes, state.searchQuery, state.selectedTagId),
                             tags = if (tags.isEmpty()) DefaultTags.list else tags,
+                            albums = albums,
                             isLoading = false
                         )
                     }
@@ -67,6 +71,33 @@ class GalleryViewModel(
                 selectedTagId = newSelectedTagId,
                 quotes = filterQuotes(allQuotesCache, state.searchQuery, newSelectedTagId)
             )
+        }
+    }
+
+    fun onAlbumSelect(albumId: String?) {
+        _uiState.update { state ->
+            val newSelectedAlbumId = if (state.selectedAlbumId == albumId) null else albumId
+            state.copy(selectedAlbumId = newSelectedAlbumId)
+        }
+        if (albumId != null) {
+            viewModelScope.launch {
+                repository.getQuotesForAlbum(albumId).collect { albumQuotes ->
+                    _uiState.update { state ->
+                        state.copy(quotes = filterQuotes(albumQuotes, state.searchQuery, state.selectedTagId))
+                    }
+                }
+            }
+        } else {
+            _uiState.update { state ->
+                state.copy(quotes = filterQuotes(allQuotesCache, state.searchQuery, state.selectedTagId))
+            }
+        }
+    }
+
+    fun createAlbum(album: Album) {
+        viewModelScope.launch {
+            repository.saveAlbum(album)
+            showUserMessage("Thought album '${album.name}' created.")
         }
     }
 

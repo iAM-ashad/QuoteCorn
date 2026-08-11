@@ -29,6 +29,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.text.font.FontWeight
 import com.app.quotely.ui.theme.LocalQuotelyTypography
 import com.app.quotely.ui.theme.ThemePreset
 import com.app.quotely.ui.theme.WarmGold
@@ -45,6 +46,7 @@ fun DetailControlToolbar(
     onThemeSelect: (String) -> Unit,
     onExportClick: () -> Unit,
     onDeleteClick: () -> Unit,
+    onAddToAlbumClick: (() -> Unit)? = null,
     onDismissPanel: (() -> Unit)? = null,
     modifier: Modifier = Modifier
 ) {
@@ -144,12 +146,30 @@ fun DetailControlToolbar(
 
         Spacer(modifier = Modifier.height(4.dp))
 
-        // Action Buttons Row (DELETE & EXPORT PNG)
+        // Action Buttons Row (ADD TO ALBUM, DELETE & EXPORT PNG)
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Add to Album Button
+            onAddToAlbumClick?.let { onAdd ->
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .border(width = 1.dp, color = WarmGold.copy(alpha = 0.8f), shape = RoundedCornerShape(0.dp))
+                        .clickable { onAdd() }
+                        .padding(vertical = 12.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "ADD TO ALBUM",
+                        style = typography.uiButton.copy(fontSize = 10.sp, fontWeight = FontWeight.Bold),
+                        color = WarmGold
+                    )
+                }
+            }
+
             // Delete Quote Button
             Box(
                 modifier = Modifier
@@ -160,8 +180,8 @@ fun DetailControlToolbar(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = if (isDeleting) "DELETING..." else "DELETE QUOTE",
-                    style = typography.uiButton.copy(fontSize = 11.sp),
+                    text = if (isDeleting) "DELETING..." else "DELETE",
+                    style = typography.uiButton.copy(fontSize = 10.sp),
                     color = Color(0xFFFFB4AB)
                 )
             }
@@ -175,7 +195,7 @@ fun DetailControlToolbar(
                     contentColor = Color(0xFF3C2F00)
                 ),
                 shape = RoundedCornerShape(0.dp),
-                modifier = Modifier.weight(1.5f)
+                modifier = Modifier.weight(1.3f)
             ) {
                 if (isExporting) {
                     CircularProgressIndicator(
@@ -185,8 +205,8 @@ fun DetailControlToolbar(
                     )
                 } else {
                     Text(
-                        text = "EXPORT PNG IMAGE",
-                        style = typography.uiButton.copy(fontSize = 11.sp)
+                        text = "EXPORT PNG",
+                        style = typography.uiButton.copy(fontSize = 10.sp)
                     )
                 }
             }

@@ -62,6 +62,8 @@ fun GalleryScreen(
     uiState: GalleryUiState,
     onSearchQueryChange: (String) -> Unit,
     onTagSelect: (String?) -> Unit,
+    onAlbumSelect: (String?) -> Unit = {},
+    onCreateAlbum: (com.app.quotely.domain.model.Album) -> Unit = {},
     onQuoteClick: (Quote) -> Unit,
     onDeleteQuote: (String) -> Unit,
     onCreateQuoteClick: () -> Unit,
@@ -71,6 +73,7 @@ fun GalleryScreen(
 ) {
     val typography = LocalQuotelyTypography.current
     var quoteToDeleteId by remember { mutableStateOf<String?>(null) }
+    var showCreateAlbumDialog by remember { mutableStateOf(false) }
     val snackbarHostState = remember { SnackbarHostState() }
 
     uiState.userMessage?.let { msg ->
@@ -88,6 +91,16 @@ fun GalleryScreen(
                 quoteToDeleteId = null
             },
             onDismiss = { quoteToDeleteId = null }
+        )
+    }
+
+    if (showCreateAlbumDialog) {
+        CreateAlbumDialog(
+            onDismiss = { showCreateAlbumDialog = false },
+            onCreateAlbum = { album ->
+                onCreateAlbum(album)
+                showCreateAlbumDialog = false
+            }
         )
     }
 
@@ -274,6 +287,16 @@ fun GalleryScreen(
                         unfocusedTextColor = Color.White
                     ),
                     shape = RoundedCornerShape(0.dp)
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                // Album Carousel Row
+                AlbumCarouselRow(
+                    albums = uiState.albums,
+                    selectedAlbumId = uiState.selectedAlbumId,
+                    onAlbumSelect = onAlbumSelect,
+                    onCreateAlbumClick = { showCreateAlbumDialog = true }
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))

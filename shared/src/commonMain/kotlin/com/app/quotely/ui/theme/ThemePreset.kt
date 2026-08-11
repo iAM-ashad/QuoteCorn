@@ -285,6 +285,8 @@ data class ThemePreset(
             SereneSanctuary,
             EditorialParchment
         )
+
+        fun fromId(id: String): ThemePreset = availablePresets.find { it.id == id } ?: Default
     }
 }
 
